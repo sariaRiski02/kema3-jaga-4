@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('penggunaan_air', function (Blueprint $table) {
             $table->id();
-            $table->boolean('sumur');
-            $table->boolean('mata_air');
-            $table->boolean('pdam');
-            $table->boolean('lainnya');
+            $table->boolean('sumur')->nullable();
+            $table->boolean('mata_air')->nullable();
+            $table->boolean('pdam')->nullable();
+            $table->boolean('lainnya')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

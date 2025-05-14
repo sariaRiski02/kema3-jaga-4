@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('kendaraan', function (Blueprint $table) {
             $table->id();
-            $table->integer('bus/truk');
-            $table->integer('roda_4');
-            $table->integer('roda_2');
-            $table->integer('lainnya');
+            $table->integer('bus/truk')->nullable();
+            $table->integer('roda_4')->nullable();
+            $table->integer('roda_2')->nullable();
+            $table->integer('lainnya')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

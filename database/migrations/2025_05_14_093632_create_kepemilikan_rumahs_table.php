@@ -19,13 +19,13 @@ return new class extends Migration
                 'Rumah Dinas',
                 'Menumpang',
                 'Lainnya'
-            ]);
+            ])->nullable();
             $table->enum('tipe_rumah', [
                 'Permanen',
                 'Semi Permanen',
                 'Non Permanen',
                 'Lainnya'
-            ]);
+            ])->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('warga', function (Blueprint $table) {
             $table->id();
-            $table->string('nik')->unique();
-            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->date('tanggal_kematian');
-            $table->string('alamat');
+            $table->string('nama')->nullable(false);
+            $table->string('nik')->unique()->index()->nullable();
+            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan'])->nullable(false);
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->date('tanggal_kematian')->nullable();
+            $table->string('alamat')->nullable();
             $table->enum('status_keluarga', [
                 'Kepala Keluarga',
                 'Istri',
@@ -33,8 +34,8 @@ return new class extends Migration
                 'Keponakan',
                 'Sepupu',
                 'Lainnya'
-            ]);
-            $table->string('pekerjaan');
+            ])->nullable();
+            $table->string('pekerjaan')->nullable();
             $table->enum('agama', [
                 'Islam',
                 'Kristen',
@@ -42,13 +43,13 @@ return new class extends Migration
                 'Hindu',
                 'Konghuchu',
                 'Lainnya'
-            ]);
+            ])->nullable();
             $table->enum('status_perkawinan', [
                 'Belum Kawin',
                 'Kawin',
                 'Cerai Hidup',
                 'Cerai Mati'
-            ]);
+            ])->nullable();
             $table->foreignId('kk_id')
                 ->constrained('kk')
                 ->onDelete('cascade')

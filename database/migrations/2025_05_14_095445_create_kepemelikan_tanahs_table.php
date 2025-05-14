@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('kepemelikan_tanah', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_tanah');
-            $table->float('luas');
+            $table->string('jenis_tanah')->nullable();
+            $table->float('luas')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

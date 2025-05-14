@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('kepemilikan_elektroniks', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_elektronik');
-            $table->integer('jumlah');
+            $table->string('jenis_elektronik')->nullable();
+            $table->integer('jumlah')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

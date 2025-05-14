@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('usaha', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis');
-            $table->integer('jumlah');
-            $table->string('keterangan');
+            $table->string('jenis')->nullable();
+            $table->integer('jumlah')->nullable();
+            $table->string('keterangan')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('penggunaan_bahan_bakar', function (Blueprint $table) {
             $table->id();
-            $table->boolean('minyak_tanah');
-            $table->boolean('kayu_bakar');
-            $table->boolean('gas');
-            $table->boolean('solar');
-            $table->boolean('lainnya');
+            $table->boolean('minyak_tanah')->nullable();
+            $table->boolean('kayu_bakar')->nullable();
+            $table->boolean('gas')->nullable();
+            $table->boolean('solar')->nullable();
+            $table->boolean('lainnya')->nullable();
             $table->foreignId('warga_id')->constrained('warga');
             $table->timestamps();
         });

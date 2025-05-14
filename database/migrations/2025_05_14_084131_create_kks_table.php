@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kk', function (Blueprint $table) {
             $table->id();
-            $table->string('no_kk');
+            $table->string('no_kk')->nullable(false);
             $table->timestamps();
         });
     }
