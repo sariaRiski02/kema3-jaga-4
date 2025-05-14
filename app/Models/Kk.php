@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kk extends Model
 {
     /** @use HasFactory<\Database\Factories\KkFactory> */
     use HasFactory;
+
+    public function warga()
+    {
+        return $this->hasMany(Warga::class);
+    }
 }
