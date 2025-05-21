@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class WcKamarMandiFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'ikut_lpm' => $this->faker->boolean,
+            'warga_id' => Warga::inRandomOrder()->first()->id,
         ];
     }
 }

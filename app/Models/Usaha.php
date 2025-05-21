@@ -11,6 +11,8 @@ class Usaha extends Model
     /** @use HasFactory<\Database\Factories\UsahaFactory> */
     use HasFactory;
 
+    protected $table = 'usaha';
+
     public function warga()
     {
         return $this->belongsTo(Warga::class);

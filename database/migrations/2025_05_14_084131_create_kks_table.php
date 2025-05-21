@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kk', function (Blueprint $table) {
             $table->id();
-            $table->string('no_kk')->nullable(false);
+            $table->string('no_kk', 16)->unique()->nullable(false);
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kks');
+        Schema::dropIfExists('kk');
     }
 };

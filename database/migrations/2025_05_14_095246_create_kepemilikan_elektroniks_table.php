@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kepemilikan_elektroniks', function (Blueprint $table) {
+        Schema::create('kepemilikan_elektronik', function (Blueprint $table) {
             $table->id();
             $table->string('jenis_elektronik')->nullable();
             $table->integer('jumlah')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kepemilikan_elektroniks');
+        Schema::dropIfExists('kepemilikan_elektronik');
     }
 };

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,16 @@ class KepemelikanTanahFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'jenis_tanah' => $this->faker->randomElement([
+                'Tanah Kosong',
+                'Tanah Sawah',
+                'Tanah Kebun',
+                'Tanah Perumahan',
+                'Tanah Tambak',
+            ]),
+            'luas' => $this->faker->randomFloat,
+            'warga_id' => Warga::inRandomOrder()->first()->id
+
         ];
     }
 }

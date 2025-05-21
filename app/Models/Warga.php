@@ -20,6 +20,8 @@ class Warga extends Model
     /** @use HasFactory<\Database\Factories\WargaFactory> */
     use HasFactory;
 
+    protected $table = 'warga';
+
     public function kk()
     {
         return $this->belongsTo(Kk::class);

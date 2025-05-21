@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Usaha;
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,30 @@ class UsahaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'warga_id' => Warga::inRandomOrder()->first()->id,
+            'jenis' => $this->faker->randomElement([
+                'Toko Kelontong',
+                'Warung Makan',
+                'Bengkel Motor',
+                'Salon Kecantikan',
+                'Laundry',
+                'Fotokopi',
+                'Kafe',
+                'Apotek',
+                'Percetakan',
+                'Peternakan',
+                'Pertanian',
+                'Konter Pulsa',
+                'Minimarket',
+                'Jasa Pengiriman',
+                'Rental Mobil',
+                'Penyewaan Alat',
+                'Kios Buah',
+                'Kios Sayur',
+                'Warnet',
+                'Butik'
+            ]),
+            'jumlah' => $this->faker->numerify('#'),
         ];
     }
 }

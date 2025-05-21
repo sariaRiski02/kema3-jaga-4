@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Usaha;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UsahaSeeder extends Seeder
 {
@@ -12,6 +13,6 @@ class UsahaSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Usaha::factory()->count(20)->create();
     }
 }

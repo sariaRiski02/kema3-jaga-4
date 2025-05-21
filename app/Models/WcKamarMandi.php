@@ -11,6 +11,7 @@ class WcKamarMandi extends Model
     /** @use HasFactory<\Database\Factories\WcKamarMandiFactory> */
     use HasFactory;
 
+    protected $table = 'wc_kamar_mandi';
     public function warga()
     {
         return $this->belongsTo(Warga::class);

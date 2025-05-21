@@ -17,7 +17,7 @@ class KkFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'no_kk' => '710601' . $this->faker->date('dmy') . $this->faker->unique()->numerify('####'),
         ];
     }
 }

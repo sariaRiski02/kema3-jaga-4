@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,11 @@ class PenggunaanAirFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'sumur' => $this->faker->boolean,
+            'mata_air' => $this->faker->boolean,
+            'lainnya' => $this->faker->boolean,
+            'warga_id' => Warga::inRandomOrder()->first()->id,
+
         ];
     }
 }

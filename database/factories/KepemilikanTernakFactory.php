@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Warga;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,21 @@ class KepemilikanTernakFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'jenis_ternak' => $this->faker->randomElement([
+                'sapi',
+                'kambing',
+                'domba',
+                'ayam',
+                'bebek',
+                'kerbau',
+                'kuda',
+                'itik',
+                'angsa',
+                'kelinci',
+                'lainnya'
+            ]),
+            'jumlah' => $this->faker->numerify('#'),
+            'warga_id' => Warga::inRandomOrder()->first()->id,
         ];
     }
 }

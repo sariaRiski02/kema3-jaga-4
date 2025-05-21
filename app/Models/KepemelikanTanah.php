@@ -11,6 +11,7 @@ class KepemelikanTanah extends Model
     /** @use HasFactory<\Database\Factories\KepemelikanTanahFactory> */
     use HasFactory;
 
+    protected $table = 'kepemelikan_tanah';
     public function warga()
     {
         return $this->belongsTo(Warga::class);

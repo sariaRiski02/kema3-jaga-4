@@ -11,6 +11,8 @@ class Kendaraan extends Model
     /** @use HasFactory<\Database\Factories\KendaraanFactory> */
     use HasFactory;
 
+
+    protected $table = 'kendaraan';
     public function warga()
     {
         return $this->belongsTo(Warga::class);
