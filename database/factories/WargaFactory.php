@@ -27,15 +27,15 @@ class WargaFactory extends Factory
 
         // 
 
-        $date = $tanggal_lahir . '-' . $bulan_lahir . '-' . $tahun_lahir;
+
 
         return [
             'nama' => $this->faker->name,
             'nik' => $nik,
             'jenis_kelamin' => $jenis_kelamin,
             'tempat_lahir' => $this->faker->city,
-            'tanggal_lahir' => $date,
-            'tanggal_kematian' => $this->faker->optional(0.85)->date('d-m-Y H:i'),
+            'tanggal_lahir' => $this->faker->dateTimeBetween('-85 years', '-0 years')->format('Y-m-d'),
+            'tanggal_kematian' => $this->faker->optional(0.2)->date('d-m-Y H:i'),
             'alamat' => $this->faker->address,
             'status_keluarga' => $this->faker->randomElement([
                 'Kepala Keluarga',

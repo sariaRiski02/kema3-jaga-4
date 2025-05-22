@@ -12,6 +12,7 @@ use App\Models\KepemilikanRumah;
 use App\Models\KepemilikanTernak;
 use App\Models\PenggunaanBahanBakar;
 use App\Models\KepemilikanElektronik;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -21,6 +22,7 @@ class Warga extends Model
     use HasFactory;
 
     protected $table = 'warga';
+
 
     public function kk()
     {
