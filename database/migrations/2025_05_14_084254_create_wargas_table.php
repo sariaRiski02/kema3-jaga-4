@@ -50,6 +50,15 @@ return new class extends Migration
                 'Cerai Hidup',
                 'Cerai Mati'
             ])->nullable();
+            $table->enum('pendidikan', [
+                'Tidak Sekolah',
+                'PAUD',
+                'TK',
+                'SD',
+                'SMP',
+                'SMA',
+                'Sarjana',
+            ]);
             $table->foreignId('kk_id')
                 ->constrained('kk')
                 ->onDelete('cascade')

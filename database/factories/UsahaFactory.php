@@ -20,7 +20,7 @@ class UsahaFactory extends Factory
     {
         return [
             'warga_id' => Warga::inRandomOrder()->first()->id,
-            'jenis' => $this->faker->randomElement([
+            'jenis_usaha' => $this->faker->randomElement([
                 'Toko Kelontong',
                 'Warung Makan',
                 'Bengkel Motor',

@@ -147,9 +147,9 @@
     new Chart(document.getElementById("pendidikanChart"), {
       type: "pie",
       data: {
-        labels: ["Tidak Sekolah", "SD", "SMP", "SMA", "Sarjana"],
+        labels: @json($lebel_pendidikan),
         datasets: [{
-          data: [50, 300, 250, 150, 50],
+          data: @json($value_pendidikan),
           backgroundColor: ["#fcd34d", "#fbbf24", "#f59e0b", "#d97706", "#b45309"]
         }]
       },
@@ -159,10 +159,10 @@
     new Chart(document.getElementById("pekerjaanChart"), {
       type: "bar",
       data: {
-        labels: ["Petani", "Nelayan", "Pedagang", "Guru", "Lainnya"],
+        labels: @json($lebel_pekerjaan),
         datasets: [{
           label: "Jumlah",
-          data: [200, 120, 180, 40, 90],
+          data: @json($value_pekerjaan),
           backgroundColor: ["#34d399", "#22c55e", "#10b981", "#0ea5e9", "#6366f1"]
         }]
       },
@@ -172,10 +172,10 @@
     new Chart(document.getElementById("usahaChart"), {
       type: "bar",
       data: {
-        labels: ["Warung", "Tani", "Jasa", "Online", "Lainnya"],
+        labels: @json($lebel_usaha),
         datasets: [{
           label: "Jumlah",
-          data: [100, 80, 60, 30, 20],
+          data: @json($value_usaha),
           backgroundColor: ["#fbbf24", "#f59e0b", "#ef4444", "#8b5cf6", "#10b981"]
         }]
       },
@@ -185,10 +185,10 @@
     new Chart(document.getElementById("bahanChart"), {
       type: "pie",
       data: {
-        labels: ["Kayu Bakar", "Gas", "Minyak Tanah"],
+        labels: @json($lebel_bahan_bakar),
         datasets: [{
-          data: [100, 200, 50],
-          backgroundColor: ["#d97706", "#facc15", "#fb923c"]
+          data: @json($value_bahan_bakar),
+          backgroundColor: ["#d97706", "#facc15", "#fb923c", "#a3e635", "#38bdf8"]
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }
@@ -197,10 +197,10 @@
     new Chart(document.getElementById("kendaraanChart"), {
       type: "bar",
       data: {
-        labels: ["Motor", "Mobil Roda 4", "Bus"],
+        labels: @json($lebel_kendaraan),
         datasets: [{
           label: "Jumlah",
-          data: [400, 150, 20],
+          data: @json($value_kendaraan),
           backgroundColor: ["#4ade80", "#60a5fa", "#818cf8"]
         }]
       },
@@ -211,10 +211,10 @@
     new Chart(document.getElementById("elektronikChart"), {
       type: "bar",
       data: {
-        labels: ["TV", "Kulkas", "HP", "Komputer", "Lainnya"],
+        labels: @json($lebel_elektronik),
         datasets: [{
           label: "Jumlah",
-          data: [300, 250, 700, 100, 50],
+          data: @json($value_elektronik),
           backgroundColor: ["#4ade80", "#60a5fa", "#f472b6", "#818cf8", "#facc15"]
         }]
       },
@@ -247,6 +247,7 @@
       },
       options: { responsive: true, maintainAspectRatio: false }
     });
+
     new Chart(document.getElementById("tipeRumahChart"), {
       type: "pie",
       data: {
