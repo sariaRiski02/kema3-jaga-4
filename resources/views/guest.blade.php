@@ -129,151 +129,35 @@
 
   <!-- Chart.js Scripts -->
   <script>
-    
-    // Usia
-    new Chart(document.getElementById("usiaChart"), {
-      type: "bar",
-      data: {
-        labels: ["0–12 (Anak)", "13–18 (Remaja)", "19–59 (Dewasa)", "60+ (Lansia)"],
-        datasets: [{
-          label: "Jumlah",
-          data: @json($klasifikasi_umur),
-          backgroundColor: ["#c084fc", "#a78bfa", "#8b5cf6", "#7c3aed"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("pendidikanChart"), {
-      type: "pie",
-      data: {
-        labels: @json($lebel_pendidikan),
-        datasets: [{
-          data: @json($value_pendidikan),
-          backgroundColor: ["#fcd34d", "#fbbf24", "#f59e0b", "#d97706", "#b45309"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("pekerjaanChart"), {
-      type: "bar",
-      data: {
-        labels: @json($lebel_pekerjaan),
-        datasets: [{
-          label: "Jumlah",
-          data: @json($value_pekerjaan),
-          backgroundColor: ["#34d399", "#22c55e", "#10b981", "#0ea5e9", "#6366f1"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("usahaChart"), {
-      type: "bar",
-      data: {
-        labels: @json($lebel_usaha),
-        datasets: [{
-          label: "Jumlah",
-          data: @json($value_usaha),
-          backgroundColor: ["#fbbf24", "#f59e0b", "#ef4444", "#8b5cf6", "#10b981"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("bahanChart"), {
-      type: "pie",
-      data: {
-        labels: @json($lebel_bahan_bakar),
-        datasets: [{
-          data: @json($value_bahan_bakar),
-          backgroundColor: ["#d97706", "#facc15", "#fb923c", "#a3e635", "#38bdf8"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("kendaraanChart"), {
-      type: "bar",
-      data: {
-        labels: @json($lebel_kendaraan),
-        datasets: [{
-          label: "Jumlah",
-          data: @json($value_kendaraan),
-          backgroundColor: ["#4ade80", "#60a5fa", "#818cf8"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Elektronik
-    new Chart(document.getElementById("elektronikChart"), {
-      type: "bar",
-      data: {
-        labels: @json($lebel_elektronik),
-        datasets: [{
-          label: "Jumlah",
-          data: @json($value_elektronik),
-          backgroundColor: ["#4ade80", "#60a5fa", "#f472b6", "#818cf8", "#facc15"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Ternak
-    new Chart(document.getElementById("ternakChart"), {
-      type: "bar",
-      data: {
-        labels: ["Sapi", "Kambing", "Ayam", "Bebek"],
-        datasets: [{
-          label: "Jumlah",
-          data: [80, 120, 300, 90],
-          backgroundColor: ["#f87171", "#fb923c", "#facc15", "#34d399"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Rumah
-    new Chart(document.getElementById("statusRumahChart"), {
-      type: "pie",
-      data: {
-        labels: ["Milik Sendiri", "Sewa", "Kontrak", "Numpang"],
-        datasets: [{
-          data: [500, 100, 50, 20],
-          backgroundColor: ["#34d399", "#60a5fa", "#fbbf24", "#a78bfa"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    new Chart(document.getElementById("tipeRumahChart"), {
-      type: "pie",
-      data: {
-        labels: ["Permanen", "Semi Permanen", "Non Permanen"],
-        datasets: [{
-          data: [400, 200, 70],
-          backgroundColor: ["#8b5cf6", "#f59e0b", "#fca5a5"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    // Tanah
-    new Chart(document.getElementById("tanahChart"), {
-      type: "bar",
-      data: {
-        labels: ["SHM", "Girik", "Sewa", "Lainnya"],
-        datasets: [{
-          label: "Jumlah",
-          data: [150, 80, 40, 30],
-          backgroundColor: ["#fbbf24", "#f59e0b", "#ef4444", "#10b981"]
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false }
-    });
-
+      window.appData = {
+        penduduk: @json($penduduk),
+        kk: @json($kk),
+        klasifikasi_umur: @json($klasifikasi_umur),
+        laki_laki: @json($laki_laki),
+        perempuan: @json($perempuan),
+        lebel_pekerjaan: @json($lebel_pekerjaan),
+        value_pekerjaan: @json($value_pekerjaan),
+        lebel_pendidikan: @json($lebel_pendidikan),
+        value_pendidikan: @json($value_pendidikan),
+        lebel_usaha: @json($lebel_usaha),
+        value_usaha: @json($value_usaha),
+        lebel_bahan_bakar: @json($lebel_bahan_bakar),
+        value_bahan_bakar: @json($value_bahan_bakar),
+        lebel_kendaraan: @json($lebel_kendaraan),
+        value_kendaraan: @json($value_kendaraan),
+        lebel_elektronik: @json($lebel_elektronik),
+        value_elektronik: @json($value_elektronik),
+        lebel_ternak: @json($lebel_ternak),
+        value_ternak: @json($value_ternak),
+        lebel_rumah: @json($lebel_rumah),
+        value_rumah: @json($value_rumah),
+        lebel_tipe_rumah: @json($lebel_tipe_rumah),
+        value_tipe_rumah: @json($value_tipe_rumah),
+        lebel_tanah: @json($lebel_tanah),
+        value_tanah: @json($value_tanah),
+      };
   </script>
+  <script src="{{ asset('/chart.js') }}"></script>
+
 </body>
 </html>

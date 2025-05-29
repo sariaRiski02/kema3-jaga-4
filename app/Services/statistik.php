@@ -6,8 +6,12 @@ use Carbon\Carbon;
 use App\Models\Usaha;
 use App\Models\Warga;
 use App\Models\Kendaraan;
-use App\Models\KepemilikanElektronik;
+use App\Models\KepemelikanTanah;
+use App\Models\KepemilikanTernak;
+use Illuminate\Support\Facades\DB;
 use App\Models\PenggunaanBahanBakar;
+use App\Models\KepemilikanElektronik;
+use App\Models\KepemilikanRumah;
 
 class statistik
 {
@@ -156,5 +160,35 @@ class statistik
         }
 
         return $paramElek;
+    }
+
+
+    public function ternak()
+    {
+        $ternak = KepemilikanTernak::pluck('jenis_ternak')->countBy()->sortDesc();
+        return $ternak;
+    }
+
+    public function rumah()
+    {
+        $rumah = KepemilikanRumah::pluck('status_rumah')->countBy()->sortDesc();
+        return $rumah;
+    }
+
+    public function tipe_rumah()
+    {
+        $rumah = KepemilikanRumah::pluck('tipe_rumah')->countBy()->sortDesc();
+        return $rumah;
+    }
+
+    public function tanah()
+    {
+        $tanah = KepemelikanTanah::pluck('jenis_tanah')->countBy()->sortDesc();
+        $param = 4;
+        $paramTanah = $tanah->take($param);
+        if ($paramTanah->count() > 0) {
+            $paramTanah['lainnya'] = $tanah->slice($param)->sum();
+        }
+        return $paramTanah;
     }
 }

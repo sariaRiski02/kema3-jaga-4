@@ -67,6 +67,28 @@ class GuestController extends Controller
         $elektronik = $this->statistik->elektronik();
         $lebel_elektronik = $elektronik->keys()->toArray();
         $value_elektronik = $elektronik->values()->toArray();
+
+
+        // ternak
+        $ternak = $this->statistik->ternak();
+        $lebel_ternak = $ternak->keys()->toArray();
+        $value_ternak = $ternak->values()->toArray();
+
+        // rumah
+        $rumah = $this->statistik->rumah();
+        $lebel_rumah = $rumah->keys()->toArray();
+        $value_rumah = $rumah->values()->toArray();
+
+        // tipe rumah
+        $tipe_rumah = $this->statistik->tipe_rumah();
+        $lebel_tipe_rumah = $tipe_rumah->keys()->toArray();
+        $value_tipe_rumah = $tipe_rumah->values()->toArray();
+
+        // tanah
+        $tanah = $this->statistik->tanah();
+        $lebel_tanah = $tanah->keys()->toArray();
+        $value_tanah = $tanah->values()->toArray();
+
         return view('Guest', compact(
             'penduduk',
             'kk',
@@ -92,8 +114,18 @@ class GuestController extends Controller
             // elektronik
             'lebel_elektronik',
             'value_elektronik',
-
-
+            // ternak
+            'lebel_ternak',
+            'value_ternak',
+            // rumah
+            'lebel_rumah',
+            'value_rumah',
+            // tipe_rumah,
+            'lebel_tipe_rumah',
+            'value_tipe_rumah',
+            // tanah
+            'lebel_tanah',
+            'value_tanah',
 
         ));
     }
