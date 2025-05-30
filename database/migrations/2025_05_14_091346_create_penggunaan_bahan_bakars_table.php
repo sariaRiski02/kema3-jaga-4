@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('gas')->nullable();
             $table->boolean('solar')->nullable();
             $table->boolean('lainnya')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

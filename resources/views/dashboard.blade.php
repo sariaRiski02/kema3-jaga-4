@@ -5,64 +5,7 @@
   <title>Dashboard Desa Kema 3 - Jaga 4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    .input {
-      @apply p-3 border border-purple-300 bg-white rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-200;
-    }
-    
-    .search-highlight {
-      background-color: #fef3c7;
-      font-weight: bold;
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.3s ease-in;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .no-results {
-      animation: slideDown 0.3s ease-out;
-    }
-    
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .card-hover {
-      transition: all 0.3s ease;
-    }
-
-    .card-hover:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .file-drop-zone {
-      border: 2px dashed #a855f7;
-      transition: all 0.3s ease;
-    }
-
-    .file-drop-zone.dragover {
-      border-color: #7c3aed;
-      background-color: #f3e8ff;
-    }
-
-    .progress-bar {
-      transition: width 0.3s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ asset('/styles/style.css') }}">
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen">
 
@@ -87,7 +30,7 @@
       <div class="flex items-center justify-between">
         <div>
         <h3 class="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-purple-700">Jumlah Penduduk Aktif</h3>
-        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPendudukAktif">0</p>
+        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPendudukAktif">{{ $penduduk_aktif }}</p>
         </div>
         <div class="text-2xl sm:text-3xl">👥</div>
       </div>
@@ -96,7 +39,7 @@
       <div class="flex items-center justify-between">
         <div>
         <h3 class="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-purple-700">Jumlah Penduduk Pernah Terdata</h3>
-        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPendudukTerdata">0</p>
+        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPendudukTerdata">{{ $semua_penduduk }}</p>
         </div>
         <div class="text-2xl sm:text-3xl">📋</div>
       </div>
@@ -105,7 +48,7 @@
       <div class="flex items-center justify-between">
         <div>
         <h3 class="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-purple-700">Jumlah Laki-Laki</h3>
-        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalLakiLaki">0</p>
+        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalLakiLaki">{{ $laki_laki }}</p>
         </div>
         <div class="text-2xl sm:text-3xl">👦</div>
       </div>
@@ -114,7 +57,7 @@
       <div class="flex items-center justify-between">
         <div>
         <h3 class="text-sm sm:text-lg font-semibold mb-1 sm:mb-2 text-purple-700">Jumlah Perempuan</h3>
-        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPerempuan">0</p>
+        <p class="text-2xl sm:text-4xl font-bold text-purple-900" id="totalPerempuan">{{ $perempuan }}</p>
         </div>
         <div class="text-2xl sm:text-3xl">👧</div>
       </div>
@@ -122,18 +65,12 @@
     </div>
 
     <!-- Statistik Mini -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
-      <div class="bg-purple-100 p-4 sm:p-5 rounded-xl text-center card-hover">
+    <div class="bg-purple-100 p-4 sm:p-5 rounded-xl text-center card-hover">
       <div class="text-2xl sm:text-3xl mb-2">🏠</div>
       <h4 class="text-sm sm:text-lg font-semibold text-purple-800 mb-1 sm:mb-2">Jumlah Keluarga</h4>
-      <p class="text-2xl sm:text-3xl font-bold text-purple-700" id="totalKeluarga">0</p>
-      </div>
-      <div class="bg-purple-100 p-4 sm:p-5 rounded-xl text-center card-hover">
-      <div class="text-2xl sm:text-3xl mb-2">🏡</div>
-      <h4 class="text-sm sm:text-lg font-semibold text-purple-800 mb-1 sm:mb-2">Rumah Milik Sendiri</h4>
-      <p class="text-2xl sm:text-3xl font-bold text-purple-700" id="totalRumahMilikSendiri">0</p>
-      </div>
+      <p class="text-2xl sm:text-3xl font-bold text-purple-700" id="totalKeluarga">{{ $keluarga }}</p>      
     </div>
+    
 
     <!-- Import Excel Section -->
     <div class="bg-white p-4 sm:p-8 rounded-xl shadow-xl mb-8 sm:mb-12">
@@ -369,281 +306,128 @@
     </div>
 
     <!-- Tabel Daftar Warga -->
-    <div class="bg-white p-4 sm:p-8 rounded-xl shadow-xl">
-      <h2 class="text-xl sm:text-2xl font-bold text-purple-800 mb-4 sm:mb-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-      <span class="flex items-center gap-2">
-        <span>👨‍👩‍👧‍👦</span>
-        <span>Daftar Warga</span>
-        <span id="totalCount" class="text-sm font-normal bg-purple-100 text-purple-700 px-2 py-1 rounded-full"></span>
-      </span>
-      
-      <!-- Enhanced Search -->
-      <div class="relative w-full lg:w-auto">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-        <div class="relative w-full sm:w-auto">
+    <div>
+      <!-- Enhanced Search dan Filter -->
+      <div class="mb-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+        
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-md">
           <input 
           type="text" 
           id="searchInput" 
-          placeholder="Cari NIK, Nama, atau Tempat Lahir..." 
-          class="w-full lg:w-80 px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          placeholder=" Cari NIK, Nama, atau Tempat Lahir..." 
+          class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
           />
-          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
+          <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+          🔍
+          </div>
           <button 
           id="clearSearch" 
-          class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 hover:text-gray-600 hidden"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden transition-colors duration-200"
           title="Hapus pencarian"
           >
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6m0 12L6 6"/>
-          </svg>
+          ❌
           </button>
         </div>
         
-        <!-- Filter by Gender -->
-        <select id="genderFilter" class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-          <option value="">Semua Jenis Kelamin</option>
-          <option value="Laki-laki">Laki-laki</option>
-          <option value="Perempuan">Perempuan</option>
-        </select>
-        </div>
-        
-        <!-- Search Results Counter -->
-        <div id="searchResults" class="absolute top-full left-0 right-0 mt-1 text-sm text-gray-600 hidden z-10">
-        <div class="bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm">
-          <span id="resultCount"></span>
-        </div>
-        </div>
-      </div>
-      </h2>
-
-      <div class="overflow-x-auto">
-        <table class="min-w-full border border-purple-200">
-          <thead class="bg-purple-100 text-purple-800">
-          <tr>
-            <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">NIK</th>
-            <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Nama</th>
-            <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Jenis Kelamin</th>
-            <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Tempat, Tanggal Lahir</th>
-            <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">Aksi</th>
-          </tr>
-          </thead>
-          <tbody id="tableBody" class="text-gray-700">
-            <tr>
-              <td class="px-3 sm:px-4 py-3 border">7201010101010001</td>
-              <td class="px-3 sm:px-4 py-3 border">Rina Wahyuni</td>
-              <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
-              <td class="px-3 sm:px-4 py-3 border">Manado, 12 Mei 1990</td>
-              <td class="px-3 sm:px-4 py-3 border text-center flex justify-center gap-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs flex items-center" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V21h8" />
-            </svg>
-            Edit
-          </button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Hapus
-          </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-3 sm:px-4 py-3 border">7201010101010002</td>
-              <td class="px-3 sm:px-4 py-3 border">Ahmad Susanto</td>
-              <td class="px-3 sm:px-4 py-3 border">Laki-laki</td>
-              <td class="px-3 sm:px-4 py-3 border">Jakarta, 15 Januari 1985</td>
-              <td class="px-3 sm:px-4 py-3 border text-center flex justify-center gap-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs flex items-center" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V21h8" />
-            </svg>
-            Edit
-          </button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Hapus
-          </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-3 sm:px-4 py-3 border">7201010101010003</td>
-              <td class="px-3 sm:px-4 py-3 border">Siti Nurhaliza</td>
-              <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
-              <td class="px-3 sm:px-4 py-3 border">Bandung, 22 Maret 1992</td>
-              <td class="px-3 sm:px-4 py-3 border text-center flex justify-center gap-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs flex items-center" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V21h8" />
-            </svg>
-            Edit
-          </button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Hapus
-          </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-3 sm:px-4 py-3 border">7201010101010004</td>
-              <td class="px-3 sm:px-4 py-3 border">Budi Setiawan</td>
-              <td class="px-3 sm:px-4 py-3 border">Laki-laki</td>
-              <td class="px-3 sm:px-4 py-3 border">Surabaya, 10 Juli 1988</td>
-              <td class="px-3 sm:px-4 py-3 border text-center flex justify-center gap-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs flex items-center" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V21h8" />
-            </svg>
-            Edit
-          </button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Hapus
-          </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-3 sm:px-4 py-3 border">7201010101010005</td>
-              <td class="px-3 sm:px-4 py-3 border">Dewi Sartika</td>
-              <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
-              <td class="px-3 sm:px-4 py-3 border">Makassar, 5 September 1995</td>
-              <td class="px-3 sm:px-4 py-3 border text-center flex justify-center gap-2">
-          <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs flex items-center" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V21h8" />
-            </svg>
-            Edit
-          </button>
-          <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-xs flex items-center" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Hapus
-          </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        
-        <!-- No Results Message -->
-        <div id="noResults" class="hidden text-center py-12">
-          <div class="no-results">
-          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.409-1.194-5.64-3.013M8.343 4.343A8 8 0 1119.657 19.657 8 8 0 018.343 4.343z"/>
-          </svg>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data yang ditemukan</h3>
-          <p class="text-gray-500">Coba ubah kata kunci pencarian Anda</p>
+        <!-- Filter Section -->
+        <div class="flex items-center gap-3">
+          <!-- Gender Filter -->
+          <div class="relative">
+          <select id="genderFilter" class="appearance-none bg-white px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+            <option value="">👥 Semua Jenis Kelamin</option>
+            <option value="Laki-laki">👨 Laki-laki</option>
+            <option value="Perempuan">👩 Perempuan</option>
+          </select>
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            ⬇️
           </div>
-        </div>
-        </div>
-        
-        <!-- Pagination Info -->
-        <div id="pagination" class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <div class="text-sm text-gray-600">
-          Menampilkan <span id="showingFrom">1</span> - <span id="showingTo">10</span> dari <span id="totalData">0</span> data
+          </div>
+          
+          <!-- Reset Filter Button -->
+          <button 
+          id="resetFilters" 
+          class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md"
+          title="Reset semua filter"
+          >
+          🔄 Reset
+          </button>
         </div>
       </div>
+        
+      <!-- Search Results Counter -->
+      <div id="searchResults" class="mt-3 text-sm text-gray-600 hidden">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-2">
+        <span>📊</span>
+        <span id="resultCount"></span>
+        </div>
+      </div>
+      </div>
+      <!-- Tambahkan wrapper overflow-x-auto agar tabel bisa di-scroll horizontal -->
+      <div class="overflow-x-auto">
+      <table class="min-w-full border border-purple-800">
+        <thead class="bg-purple-100 text-purple-800">
+          <tr>
+          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">NIK</th>
+          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Nama</th>
+          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Jenis Kelamin</th>
+          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Umur</th>
+          <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="rounded-2xl text-gray-700">
+          <tr id="dataTable">
+            <td class="px-3 sm:px-4 py-3 border">7201010101010001</td>
+            <td class="px-3 sm:px-4 py-3 border">Rina Wahyuni</td>
+            <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
+            <td class="px-3 sm:px-4 py-3 border">30 tahun</td>
+            <td class="px-3 sm:px-4 py-3 border text-center">
+              <div class="flex justify-center gap-2">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Lihat Detail">
+              👁️ Lihat
+                </button>
+                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Edit Data">
+              ✏️ Edit
+                </button>
+                <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Hapus Data">
+              🗑️ Hapus
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="pagination"></div>
+      </div>
+      <div class="flex justify-end m-5">
+      <a href="" class=" bg-blue-600 hover:bg-blue-700 
+      text-white px-5 py-2 
+      rounded-lg font-semibold flex items-center gap-2 
+      shadow transition-all duration-200">
+        ⬇️ Download Data Excel
+      </a>
+      </div>
 
-      <!-- Download Button -->
-      <div class="mt-6 flex justify-end">
-      <button
-        id="downloadAllBtn"
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2 shadow transition-all duration-200"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-        </svg>
-        Download Semua Data
-      </button>
+      <!-- No Results Message -->
+      <div id="noResults" class="hidden text-center py-12">
+      <div class="no-results">
+      <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.409-1.194-5.64-3.013M8.343 4.343A8 8 0 1119.657 19.657 8 8 0 018.343 4.343z"/>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data yang ditemukan</h3>
+      <p class="text-gray-500">Coba ubah kata kunci pencarian Anda</p>
+      </div>
       </div>
     </div>
   </main>
 
   <footer class="bg-white shadow mt-8 sm:mt-12 py-4 text-center text-sm text-gray-500">
-    &copy; 2025 Pemerintah Desa Kema 3 – Jaga 4. Semua hak dilindungi.
+    &copy; created by rizky saria
   </footer>
 
-  <script>
-    // Data dari backend (ganti sample dengan window.appData jika sudah tersedia)
-    let residentsData = window.appData && window.appData.residentsData ? window.appData.residentsData : [
-      {
-        nik: "7201010101010001",
-        nama: "Rina Wahyuni",
-        jenisKelamin: "Perempuan",
-        tempatLahir: "Manado",
-        tanggalLahir: "12 Mei 1990"
-      },
-      {
-        nik: "7201010101010002",
-        nama: "Ahmad Susanto",
-        jenisKelamin: "Laki-laki",
-        tempatLahir: "Jakarta",
-        tanggalLahir: "15 Januari 1985"
-      },
-      {
-        nik: "7201010101010003",
-        nama: "Siti Nurhaliza",
-        jenisKelamin: "Perempuan",
-        tempatLahir: "Bandung",
-        tanggalLahir: "22 Maret 1992"
-      },
-      {
-        nik: "7201010101010004",
-        nama: "Budi Setiawan",
-        jenisKelamin: "Laki-laki",
-        tempatLahir: "Surabaya",
-        tanggalLahir: "10 Juli 1988"
-      },
-      {
-        nik: "7201010101010005",
-        nama: "Dewi Sartika",
-        jenisKelamin: "Perempuan",
-        tempatLahir: "Makassar",
-        tanggalLahir: "5 September 1995"
-      },
-      {
-        nik: "7201010101010006",
-        nama: "Joko Prabowo",
-        jenisKelamin: "Laki-laki",
-        tempatLahir: "Semarang",
-        tanggalLahir: "30 Oktober 1982"
-      },
-      {
-        nik: "7201010101010007",
-        nama: "Maya Sari",
-        jenisKelamin: "Perempuan",
-        tempatLahir: "Palembang",
-        tanggalLahir: "18 Desember 1993"
-      },
-      {
-        nik: "7201010101010008",
-        nama: "Agus Salim",
-        jenisKelamin: "Laki-laki",
-        tempatLahir: "Medan",
-        tanggalLahir: "2 Februari 1987"
-      },
-      {
-        nik: "7201010101010009",
-        nama: "Sri Rahayu",
-        jenisKelamin: "Perempuan",
-        tempatLahir: "Yogyakarta",
-        tanggalLahir: "25 April 1991"
-      },
-      {
-        nik: "7201010101010010",
-        nama: "Hendra Gunawan",
-        jenisKelamin: "Laki-laki",
-        tempatLahir: "Balikpapan",
-        tanggalLahir: "14 Agustus 1984"
-      }
-    ];
-      
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="{{ '/js/resident.js' }}"></script>
+
+</body>

@@ -1,0 +1,56 @@
+
+.input {
+@apply p-3 border border-purple-300 bg-white rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-200;
+}
+
+.search-highlight {
+background-color: #fef3c7;
+font-weight: bold;
+}
+
+.fade-in {
+animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+.no-results {
+animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+from {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+.card-hover {
+transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.file-drop-zone {
+border: 2px dashed #a855f7;
+transition: all 0.3s ease;
+}
+
+.file-drop-zone.dragover {
+border-color: #7c3aed;
+background-color: #f3e8ff;
+}
+
+.progress-bar {
+transition: width 0.3s ease;
+}

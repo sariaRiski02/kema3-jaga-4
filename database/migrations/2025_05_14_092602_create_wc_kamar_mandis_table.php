@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('wc_kamar_mandi', function (Blueprint $table) {
             $table->id();
             $table->boolean('ikut_lpm')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('mata_air')->nullable();
             $table->boolean('pdam')->nullable();
             $table->boolean('lainnya')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

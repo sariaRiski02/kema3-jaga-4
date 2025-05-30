@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('jenis_ternak')->nullable();
             $table->integer('jumlah')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

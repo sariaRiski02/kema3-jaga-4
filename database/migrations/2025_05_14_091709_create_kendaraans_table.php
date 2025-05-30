@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('roda_4')->nullable();
             $table->integer('roda_2')->nullable();
             $table->integer('lainnya')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

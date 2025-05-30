@@ -2,12 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\dashboard_statistik;
+use App\Services\statistik;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    protected $dash_statistik;
+    public function __construct()
+    {
+        $this->dash_statistik = new dashboard_statistik;
+    }
     public function index()
     {
-        return view('dashboard');
+        $penduduk_aktif = $this->dash_statistik->penduduk_aktif();
+        $semua_penduduk = $this->dash_statistik->semua_penduduk();
+        $laki_laki = $this->dash_statistik->jenis_kelamin()->values()[0];
+        $perempuan = $this->dash_statistik->jenis_kelamin()->values()[1];
+        $keluarga = $this->dash_statistik->keluarga();
+
+
+        return view(
+            'dashboard',
+            compact(
+                'penduduk_aktif',
+                'semua_penduduk',
+                'laki_laki',
+                'perempuan',
+                'keluarga'
+            )
+        );
     }
 }

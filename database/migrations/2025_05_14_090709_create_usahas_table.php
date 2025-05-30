@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('jenis_usaha')->nullable();
             $table->integer('jumlah')->nullable();
             $table->string('keterangan')->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }

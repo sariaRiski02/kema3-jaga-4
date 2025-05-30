@@ -26,7 +26,7 @@ return new class extends Migration
                 'Non Permanen',
                 'Lainnya'
             ])->nullable();
-            $table->foreignId('warga_id')->constrained('warga');
+            $table->foreignId('warga_id')->constrained('warga')->onDelete('cascade');
             $table->timestamps();
         });
     }
