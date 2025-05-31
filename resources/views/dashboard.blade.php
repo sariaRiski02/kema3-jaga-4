@@ -398,7 +398,9 @@
           </tr>
         </tbody>
       </table>
-      <div id="pagination"></div>
+      <div id="pagination" class="flex justify-center items-center gap-2 my-6">
+        
+      </div>
       </div>
       <div class="flex justify-end m-5">
       <a href="" class=" bg-blue-600 hover:bg-blue-700 

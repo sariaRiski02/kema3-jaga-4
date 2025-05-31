@@ -1,14 +1,14 @@
 
 function load(page = 1){
+    let endpoint = 'api/resident';
     $.ajax({
-    url: '/api/resident?page=' + page,
+    url: endpoint + '?page=' + page,
     method: 'GET',
     dataType: 'json',
     success: function(response){
-        if(response.success && Array.isArray(response.data)){
+        if(response.success && Array.isArray(response.data.data)){
             $('#tableBody').empty();
            response.data.data.forEach((warga) => {
-            console.lo('error');
                 $('#tableBody').append(
                     `<tr id="dataTable">
                         <td class="px-3 sm:px-4 py-3 border">${warga.nik}</td>
@@ -32,14 +32,48 @@ function load(page = 1){
                 )
            });
 
+           let data = response.data;
+           let prev = '';
            // Tampilkan tombol pagination
-                let paginationHtml = '';
-                if(response.data.current_page > 1){
-                    paginationHtml += `<button class="btn-page" data-page="${response.data.current_page - 1}">Prev</button>`;
+                if(data.links.at(0).url){
+                    prev = `
+                    <a href="${data.links.at(0).url}" class="bg-purple-600 text-white px-4 py-2 rounded-lg 
+                        hover:bg-purple-700 transition-all duration-200 font-semibold">
+                        ${data.links.at(0).label}
+                    </a>`;
                 }
-                if(response.data.current_page < response.data.last_page){
-                    paginationHtml += `<button class="btn-page" data-page="${response.data.current_page + 1}">Next</button>`;
+
+
+                let number = '';
+                for(let i = 1; i < data.links.length; i++){
+                    let href = window.location.origin + '/dashboard?page=' + i;
+                    if(data.links[i].active){
+                        console.log(data.links[i].active)
+                        number += `
+                            <a href="${href}" class="bg-purple-700 text-white px-4 py-2 
+                                rounded-lg font-semibold shadow">
+                                ${data.links[i].label}
+                            </a>
+                            `;
+                    }else{
+                        number += `
+                            <a href="${href}" class="bg-purple-100 text-purple-700 px-4 py-2 
+                                rounded-lg font-semibold shadow">
+                                ${data.links[i].label}
+                            </a>
+                            `;
+                    }
+                    
                 }
+
+                let next = `<a href="" class="
+                        bg-purple-600 text-white px-4 py-2 rounded-lg 
+                        hover:bg-purple-700 transition-all duration-200 font-semibold">
+                        ${response.data.links.at(-1).label}
+                        </a>`;
+
+                let paginationHtml = prev + number + next;
+                
                 $('#pagination').html(paginationHtml);
         }
     }, 
