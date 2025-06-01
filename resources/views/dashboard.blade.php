@@ -310,96 +310,96 @@
       <!-- Enhanced Search dan Filter -->
       <div class="mb-6">
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-        
-        <!-- Search Input -->
-        <div class="relative flex-1 max-w-md">
-          <input 
-          type="text" 
-          id="searchInput" 
-          placeholder=" Cari NIK, Nama, atau Tempat Lahir..." 
-          class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
-          />
-          <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-          🔍
-          </div>
-          <button 
-          id="clearSearch" 
-          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden transition-colors duration-200"
-          title="Hapus pencarian"
-          >
-          ❌
-          </button>
+      
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-md">
+        <input 
+        type="text" 
+        id="searchInput" 
+        placeholder=" Cari NIK, Nama, atau Tempat Lahir..." 
+        class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
+        />
+        <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+        🔍
         </div>
-        
-        <!-- Filter Section -->
-        <div class="flex items-center gap-3">
-          <!-- Gender Filter -->
-          <div class="relative">
-          <select id="genderFilter" class="appearance-none bg-white px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
-            <option value="">👥 Semua Jenis Kelamin</option>
-            <option value="Laki-laki">👨 Laki-laki</option>
-            <option value="Perempuan">👩 Perempuan</option>
-          </select>
-          <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            ⬇️
-          </div>
-          </div>
-          
-          <!-- Reset Filter Button -->
-          <button 
-          id="resetFilters" 
-          class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md"
-          title="Reset semua filter"
-          >
-          🔄 Reset
-          </button>
-        </div>
+        <button 
+        id="clearSearch" 
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden transition-colors duration-200"
+        title="Hapus pencarian"
+        >
+        ❌
+        </button>
       </div>
+      
+      <!-- Filter Section -->
+      <div class="flex items-center gap-3">
+        <!-- Gender Filter -->
+        <div class="relative">
+        <select id="genderFilter" class="appearance-none bg-white px-4 py-3 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+        <option value="">👥 Semua Jenis Kelamin</option>
+        <option value="Laki-laki">👨 Laki-laki</option>
+        <option value="Perempuan">👩 Perempuan</option>
+        </select>
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+        ⬇️
+        </div>
+        </div>
         
+        <!-- Reset Filter Button -->
+        <button 
+        id="resetFilters" 
+        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md"
+        title="Reset semua filter"
+        >
+        🔄 Reset
+        </button>
+      </div>
+      </div>
+      
       <!-- Search Results Counter -->
       <div id="searchResults" class="mt-3 text-sm text-gray-600 hidden">
-        <div class="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-2">
-        <span>📊</span>
-        <span id="resultCount"></span>
-        </div>
+      <div class="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 flex items-center gap-2">
+      <span>📊</span>
+      <span id="resultCount"></span>
+      </div>
       </div>
       </div>
       <!-- Tambahkan wrapper overflow-x-auto agar tabel bisa di-scroll horizontal -->
-      <div class="overflow-x-auto">
-      <table class="min-w-full border border-purple-800">
-        <thead class="bg-purple-100 text-purple-800">
-          <tr>
-          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">NIK</th>
-          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Nama</th>
-          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Jenis Kelamin</th>
-          <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Umur</th>
-          <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody" class="rounded-2xl text-gray-700">
-          <tr id="dataTable">
-            <td class="px-3 sm:px-4 py-3 border">7201010101010001</td>
-            <td class="px-3 sm:px-4 py-3 border">Rina Wahyuni</td>
-            <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
-            <td class="px-3 sm:px-4 py-3 border">30 tahun</td>
-            <td class="px-3 sm:px-4 py-3 border text-center">
-              <div class="flex justify-center gap-2">
-                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Lihat Detail">
-              👁️ Lihat
-                </button>
-                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Edit Data">
-              ✏️ Edit
-                </button>
-                <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Hapus Data">
-              🗑️ Hapus
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+      <div class="w-full overflow-x-auto">
+      <table class="min-w-full border border-purple-800 whitespace-nowrap">
+      <thead class="bg-purple-100 text-purple-800">
+        <tr>
+        <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">NIK</th>
+        <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Nama</th>
+        <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Jenis Kelamin</th>
+        <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Umur</th>
+        <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody" class="rounded-2xl text-gray-700">
+        <tr id="dataTable">
+        <td class="px-3 sm:px-4 py-3 border">7201010101010001</td>
+        <td class="px-3 sm:px-4 py-3 border">Rina Wahyuni</td>
+        <td class="px-3 sm:px-4 py-3 border">Perempuan</td>
+        <td class="px-3 sm:px-4 py-3 border">30 tahun</td>
+        <td class="px-3 sm:px-4 py-3 border text-center">
+          <div class="flex justify-center gap-2">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Lihat Detail">
+          👁️ Lihat
+          </button>
+          <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Edit Data">
+          ✏️ Edit
+          </button>
+          <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md" title="Hapus Data">
+          🗑️ Hapus
+          </button>
+          </div>
+        </td>
+        </tr>
+      </tbody>
       </table>
       <div id="pagination" class="flex justify-center items-center gap-2 my-6">
-        
+      
       </div>
       </div>
       <div class="flex justify-end m-5">
@@ -407,7 +407,7 @@
       text-white px-5 py-2 
       rounded-lg font-semibold flex items-center gap-2 
       shadow transition-all duration-200">
-        ⬇️ Download Data Excel
+      ⬇️ Download Data Excel
       </a>
       </div>
 
@@ -415,7 +415,7 @@
       <div id="noResults" class="hidden text-center py-12">
       <div class="no-results">
       <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.409-1.194-5.64-3.013M8.343 4.343A8 8 0 1119.657 19.657 8 8 0 018.343 4.343z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.409-1.194-5.64-3.013M8.343 4.343A8 8 0 1119.657 19.657 8 8 0 018.343 4.343z"/>
       </svg>
       <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada data yang ditemukan</h3>
       <p class="text-gray-500">Coba ubah kata kunci pencarian Anda</p>
