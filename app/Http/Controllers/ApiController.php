@@ -51,4 +51,20 @@ class ApiController extends Controller
             'message' => 'Data Berasil Dihapus'
         ]);
     }
+
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('q');
+        $data = Warga::with('Kk')
+            ->where('nik', 'like', "%$keyword%")
+            ->OrWhere('nama', 'like', "%$keyword%")
+            ->OrWhere('no_kk', 'like', "%$keyword%")->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hasil pencarian',
+            'data' => $data
+        ]);
+    }
 }
