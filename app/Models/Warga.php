@@ -42,7 +42,7 @@ class Warga extends Model
 
     public function penggunaan_bahan_bakar()
     {
-        return $this->hasMany(PenggunaanBahanBakar::class);
+        return $this->hasOne(PenggunaanBahanBakar::class);
     }
 
     public function kendaraan()
@@ -52,7 +52,7 @@ class Warga extends Model
 
     public function penggunaan_air()
     {
-        return $this->hasMany(PenggunaanAir::class);
+        return $this->hasOne(PenggunaanAir::class);
     }
 
     public function kepemilikan_tanah()
