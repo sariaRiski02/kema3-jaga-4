@@ -11,10 +11,6 @@ class ApiController extends Controller
     public function getAllResident()
     {
         $data = Warga::paginate(20);
-        $data->getCollection()->transform(function ($warga) {
-            $warga['umur'] = Carbon::parse($warga->tanggal_lahir)->age;
-            return $warga;
-        });
         if (!$data) {
             return response()->json([
                 'succes' => false,
@@ -64,6 +60,36 @@ class ApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Hasil pencarian',
+            'data' => $data
+        ]);
+    }
+
+    public function see($id)
+    {
+        $data = Warga::with(
+            [
+                'kendaraan',
+                'kepemilikan_tanah',
+                'kepemilikan_elektronik',
+                'kepemilikan_ternak',
+                'kk',
+                'penggunaan_air',
+                'penggunaan_bahan_bakar',
+                'usaha',
+                'wc_kamar_mandi'
+            ]
+        )->where('id', $id)->first();
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => "Gagal Menemukan Data Dengan Id $id",
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Berhasil mengambil data dengan Id $id",
             'data' => $data
         ]);
     }

@@ -23,7 +23,12 @@ class Warga extends Model
     use HasFactory;
 
     protected $table = 'warga';
+    protected $appends = ['umur'];
 
+    public function getUmurAttribute()
+    {
+        return Carbon::parse($this->tanggal_lahir)->age;
+    }
 
     public function kk()
     {
@@ -42,7 +47,7 @@ class Warga extends Model
 
     public function kendaraan()
     {
-        return $this->hasMany(Kendaraan::class);
+        return $this->hasOne(Kendaraan::class);
     }
 
     public function penggunaan_air()
@@ -72,6 +77,6 @@ class Warga extends Model
 
     public function kepemilikan_elektronik()
     {
-        return $this->hasMnay(KepemilikanElektronik::class);
+        return $this->hasMany(KepemilikanElektronik::class);
     }
 }

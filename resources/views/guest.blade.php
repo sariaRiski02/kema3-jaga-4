@@ -157,7 +157,7 @@
         value_tanah: @json($value_tanah),
       };
   </script>
-  <script src="{{ asset('/js/chart.js') }}"></script>
+  <script src="{{ asset('js/chart.js') }}"></script>
 
 </body>
 </html>
