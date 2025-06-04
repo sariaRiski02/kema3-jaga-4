@@ -52,11 +52,19 @@ class ApiController extends Controller
     public function search(Request $request)
     {
         $keyword = $request->input('q');
-        $data = Warga::with('Kk')
+        $data = Warga::with('kk')
             ->where('nik', 'like', "%$keyword%")
-            ->OrWhere('nama', 'like', "%$keyword%")
-            ->OrWhere('no_kk', 'like', "%$keyword%")->paginate(10);
+            ->orWhere('nama', 'like', "%$keyword%")
+            ->orWhereHas('kk', function ($q) use ($keyword) {
+                $q->where('no_kk', 'like', "%$keyword%");
+            })->paginate(10);
 
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hasil tidak ditemukan',
+            ]);
+        }
         return response()->json([
             'success' => true,
             'message' => 'Hasil pencarian',

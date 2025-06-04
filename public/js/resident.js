@@ -1,4 +1,3 @@
-
 export function fetchData(page = 1){
     let endpoint = 'api/resident';
     $.ajax({
@@ -14,13 +13,19 @@ export function fetchData(page = 1){
     }
     });
 }
-function render (response){
+export function render (response){
     let data = response.data.data;
+    // Hitung nomor awal berdasarkan halaman dan jumlah per halaman
+    const currentPage = response.data.current_page || 1;
+    const perPage = response.data.per_page || data.length || 1;
+    let number = (currentPage - 1) * perPage + 1;
+
     if(response.success && Array.isArray(data)){
         $('#tableBody').empty();
         data.forEach((warga) => {
             $('#tableBody').append(
                 `<tr id="dataTable">
+                    <td class="px-3 sm:px-4 py-3 border">${number++}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nik}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nama}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.jenis_kelamin}</td>
@@ -44,7 +49,7 @@ function render (response){
     }
 }
 
-function renderPagination(response){
+export function renderPagination(response){
     $('#pagination').empty();
     response.links.forEach(link => {
         // Ambil label asli
