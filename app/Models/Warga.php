@@ -27,7 +27,16 @@ class Warga extends Model
 
     public function getUmurAttribute()
     {
-        return Carbon::parse($this->tanggal_lahir)->age;
+        if (!$this->tanggal_kematian) {
+
+            return Carbon::parse($this->tanggal_lahir)->age;
+        }
+
+        $tanggal_lahir = Carbon::parse($this->tanggal_lahir);
+        $tanggal_kematian = Carbon::parse($this->tanggal_kematian);
+
+        $umur_hidup = $tanggal_lahir->diffInYears($tanggal_kematian);
+        return 'Umur Hidup: ' . round($umur_hidup);
     }
 
     public function kk()

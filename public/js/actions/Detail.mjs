@@ -211,12 +211,31 @@ function list_wc(data) {
     return html === `<ul class="pl-5 space-y-2"></ul>` ? '-' : html;
 }
 function htmlScript(warga){
-    
     const [tahun, bulan, tanggalHari] = warga.tanggal_lahir.split('-');
     let tanggal_lahir =  `${tanggalHari}-${bulan}-${tahun}`;
 
+    // Cek apakah ada tanggal kematian
+    let isMeninggal = !!warga.tanggal_kematian;
+    let notifMeninggal = '';
+    if (isMeninggal) {
+        notifMeninggal = `
+            <div class="mb-4 p-3 rounded bg-red-100 border border-red-400 text-red-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18.364 5.636l-1.414-1.414A9 9 0 105.636 18.364l1.414 1.414A9 9 0 1018.364 5.636z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 9v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V9" />
+                </svg>
+                <span>
+                    Orang ini sudah <b>meninggal dunia</b> pada tanggal <b>${warga.tanggal_kematian}</b>.
+                </span>
+            </div>
+        `;
+    }
+
     let html = `
         <div class="overflow-x-auto">
+            ${notifMeninggal}
             <table class="min-w-full text-sm text-left border border-gray-200 rounded-lg">
                 <tbody>
                     <tr>
@@ -305,8 +324,6 @@ function htmlScript(warga){
                         <th class="px-4 py-2 bg-gray-100 font-semibold">WC</th>
                         <td class="px-4 py-2">${list_wc(warga.wc_kamar_mandi)}</td>
                     </tr>
-                   
-                    
                 </tbody>
             </table>
             <button

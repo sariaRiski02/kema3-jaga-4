@@ -101,4 +101,45 @@ class ApiController extends Controller
             'data' => $data
         ]);
     }
+
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nik' => 'required|string|max:20|unique:warga,nik',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'tanggal_kematian' => 'nullable|date|after:tanggal_lahir',
+            'alamat' => 'nullable|string|max:255',
+            'status_keluarga' => 'required|string|max:50',
+            'pekerjaan' => 'nullable|string|max:100',
+            'agama' => 'required|string|max:50',
+            'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
+            'kk_id' => 'required', // tambahkan validasi untuk kk
+        ]);
+
+        $data = Warga::create([
+            'nama' => $request->nama,
+            'nik' => $request->nik,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'tanggal_kematian' => $request->tanggal_kematian,
+            'alamat' => $request->alamat,
+            'status_keluarga' => $request->status_keluarga,
+            'pekerjaan' => $request->pekerjaan,
+            'agama' => $request->agama,
+            'status_perkawinan' => $request->status_perkawinan,
+            'kk_id' => $request->kk_id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data warga berhasil disimpan',
+            'data' => $data
+        ]);
+    }
 }
