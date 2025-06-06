@@ -32,7 +32,7 @@
         <option value="Cerai Hidup">Cerai Hidup</option>
         <option value="Cerai Mati">Cerai Mati</option>
       </select>
-      <input type="text" name="no_kk" placeholder="Nomor Kartu Keluarga (KK)" class="input px-4 py-3" maxlength="16">
+      <input type="text" id="no_kk" name="no_kk" placeholder="Nomor Kartu Keluarga (KK)" class="input px-4 py-3" maxlength="16">
       <select name="status_keluarga" class="input px-4 py-3">
         <option value="">Status Dalam Keluarga</option>
         <option value="Kepala Keluarga">Kepala Keluarga</option>

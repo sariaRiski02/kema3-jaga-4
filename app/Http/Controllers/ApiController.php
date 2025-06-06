@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kk;
 use Carbon\Carbon;
 use App\Models\Warga;
 use Illuminate\Http\Request;
@@ -103,6 +104,19 @@ class ApiController extends Controller
     }
 
 
+    public function search_kk(Request $request)
+    {
+        $term = $request->input('term');
+        $kk = Kk::where('no_kk', 'like', "%$term%")
+            ->limit(10)
+            ->pluck('no_kk');
+
+        return response()->json([
+            'status' => true,
+            'messege' => "Success to Get data",
+            'data' => $kk
+        ]);
+    }
 
     public function store(Request $request)
     {

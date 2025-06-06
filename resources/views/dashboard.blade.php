@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ asset('/styles/style.css') }}">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen">
 
@@ -124,11 +125,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   <script src="{{ asset('/js/resident.js') }}" type="module"></script>
   <script src="{{ asset('/js/actions/Delete.mjs') }}" type="module"></script>
   <script src="{{ asset('/js/actions/Detail.mjs') }}" type="module"></script>
   <script src="{{ asset('/js/actions/Edit.mjs') }}" type="module"></script>
   <script src="{{ asset('/js/search.js') }}" type="module"></script>
+  <script src="{{ asset('js/input.js') }}" type="module"></script>
 
 </body>
 </html>

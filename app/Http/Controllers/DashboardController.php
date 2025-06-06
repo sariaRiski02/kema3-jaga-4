@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\dashboard_statistik;
+use App\Models\Kk;
 use App\Services\statistik;
 use Illuminate\Http\Request;
+use App\Services\dashboard_statistik;
 
 class DashboardController extends Controller
 {
@@ -21,7 +22,6 @@ class DashboardController extends Controller
         $perempuan = $this->dash_statistik->jenis_kelamin()->values()[1];
         $keluarga = $this->dash_statistik->keluarga();
 
-
         return view(
             'dashboard',
             compact(
@@ -29,7 +29,7 @@ class DashboardController extends Controller
                 'semua_penduduk',
                 'laki_laki',
                 'perempuan',
-                'keluarga'
+                'keluarga',
             )
         );
     }
