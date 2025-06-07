@@ -25,6 +25,12 @@ class Warga extends Model
     protected $table = 'warga';
     protected $appends = ['umur'];
 
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
     public function getUmurAttribute()
     {
         if (!$this->tanggal_kematian) {

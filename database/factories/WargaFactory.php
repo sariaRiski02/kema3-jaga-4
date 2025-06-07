@@ -17,7 +17,7 @@ class WargaFactory extends Factory
     public function definition(): array
     {
         // for nik
-        $jenis_kelamin = $this->faker->randomElement(['Laki-Laki', 'Perempuan']);
+        $jenis_kelamin = $this->faker->randomElement(['Laki-laki', 'Perempuan']);
         $tanggal_lahir = (int) $this->faker->date('d');
         $bulan_lahir = $this->faker->date('m');
         $tahun_lahir = $this->faker->date('y');
@@ -89,7 +89,7 @@ class WargaFactory extends Factory
                 'Kristen',
                 'Buddha',
                 'Hindu',
-                'Konghuchu',
+                'Konghucu',
                 'Lainnya'
             ]), // enum
             'status_perkawinan' => $this->faker->randomElement([

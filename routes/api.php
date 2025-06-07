@@ -11,5 +11,5 @@ Route::get('/resident/see/{id}', [ApiController::class, 'see']);
 Route::get('/resident/search', [ApiController::class, 'search']);
 Route::delete('/resident/{id}', [ApiController::class, 'delete']);
 
-Route::post('/resident', [ApiController::class, 'store']);
+Route::post('/resident', [ApiController::class, 'store'])->name('store');
 Route::post('/no_kk', [ApiController::class, 'search_kk']);

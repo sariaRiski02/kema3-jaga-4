@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Kk;
 use Carbon\Carbon;
 use App\Models\Warga;
+// use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
@@ -114,46 +117,72 @@ class ApiController extends Controller
         return response()->json([
             'status' => true,
             'messege' => "Success to Get data",
-            'data' => $kk
+            'data' => $kk,
         ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:20|unique:warga,nik',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tempat_lahir' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
+            'pendidikan' => 'required|string|max:100',
             'tanggal_kematian' => 'nullable|date|after:tanggal_lahir',
-            'alamat' => 'nullable|string|max:255',
+            'alamat' => 'required|string|max:255',
             'status_keluarga' => 'required|string|max:50',
             'pekerjaan' => 'nullable|string|max:100',
             'agama' => 'required|string|max:50',
             'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
-            'kk_id' => 'required', // tambahkan validasi untuk kk
+            'no_kk' => 'required|string'
         ]);
 
-        $data = Warga::create([
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $kk = kk::where('no_kk', $request->no_kk)->first();
+
+        if (!$kk) {
+            $kk = new Kk;
+            $kk->no_kk = $request->no_kk;
+            $kk->save();
+        }
+
+        $warga = Warga::create([
             'nama' => $request->nama,
             'nik' => $request->nik,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir' => $request->tanggal_lahir,
             'tanggal_kematian' => $request->tanggal_kematian,
+            'pendidikan' => $request->pendidikan,
             'alamat' => $request->alamat,
             'status_keluarga' => $request->status_keluarga,
             'pekerjaan' => $request->pekerjaan,
             'agama' => $request->agama,
             'status_perkawinan' => $request->status_perkawinan,
-            'kk_id' => $request->kk_id,
+            'kk_id' => $kk->id
         ]);
+
+        if (!$warga) {
+            return response()->json([
+                'status' => false,
+                'message' => "Data gagal disimpan"
+            ]);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Data warga berhasil disimpan',
-            'data' => $data
+            'data' => $warga
         ]);
     }
 }

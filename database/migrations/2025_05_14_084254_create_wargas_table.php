@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('nama')->nullable(false);
             $table->string('nik')->unique()->index()->nullable();
-            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan'])->nullable(false);
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable(false);
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->date('tanggal_kematian')->nullable();
-            $table->string('alamat')->nullable();
+            $table->string('alamat')->nullable(false);
             $table->enum('status_keluarga', [
                 'Kepala Keluarga',
                 'Istri',
@@ -41,7 +41,7 @@ return new class extends Migration
                 'Kristen',
                 'Buddha',
                 'Hindu',
-                'Konghuchu',
+                'Konghucu',
                 'Lainnya'
             ])->nullable();
             $table->enum('status_perkawinan', [
@@ -58,7 +58,7 @@ return new class extends Migration
                 'SMP',
                 'SMA',
                 'Sarjana',
-            ]);
+            ])->nullable(false);
             $table->foreignId('kk_id')
                 ->constrained('kk')
                 ->onDelete('cascade')
