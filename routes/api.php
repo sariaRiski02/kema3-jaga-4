@@ -7,7 +7,8 @@ use App\Http\Controllers\ApiController;
 
 
 Route::get('/resident', [ApiController::class, 'getAllResident']);
-Route::get('/resident/see/{id}', [ApiController::class, 'see']);
+Route::put('/resident/{id}', [ApiController::class, 'update']);
+Route::get('/resident/{id}', [ApiController::class, 'see']);
 Route::get('/resident/search', [ApiController::class, 'search']);
 Route::delete('/resident/{id}', [ApiController::class, 'delete']);
 

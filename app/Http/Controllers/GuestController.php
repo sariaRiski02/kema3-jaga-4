@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
-
     protected $statistik;
     public function __construct()
     {
@@ -46,48 +45,7 @@ class GuestController extends Controller
         $value_pendidikan = $pendidikan->get('value_pendidikan');
 
 
-        // usaha
-        $usaha = $this->statistik->usaha();
-        $lebel_usaha = $usaha->keys()->toArray();
-        $value_usaha = $usaha->values()->toArray();
 
-
-        // Bahan Bakar
-        $bahan_bakar = $this->statistik->bahan_bakar();
-        $lebel_bahan_bakar = $bahan_bakar->keys()->toArray();
-        $value_bahan_bakar = $bahan_bakar->values()->toArray();
-
-
-        // kendaraan
-        $kendaraan = $this->statistik->kendaraan();
-        $lebel_kendaraan = $kendaraan->keys()->toArray();
-        $value_kendaraan = $kendaraan->values()->toArray();
-
-        // elektronik
-        $elektronik = $this->statistik->elektronik();
-        $lebel_elektronik = $elektronik->keys()->toArray();
-        $value_elektronik = $elektronik->values()->toArray();
-
-
-        // ternak
-        $ternak = $this->statistik->ternak();
-        $lebel_ternak = $ternak->keys()->toArray();
-        $value_ternak = $ternak->values()->toArray();
-
-        // rumah
-        $rumah = $this->statistik->rumah();
-        $lebel_rumah = $rumah->keys()->toArray();
-        $value_rumah = $rumah->values()->toArray();
-
-        // tipe rumah
-        $tipe_rumah = $this->statistik->tipe_rumah();
-        $lebel_tipe_rumah = $tipe_rumah->keys()->toArray();
-        $value_tipe_rumah = $tipe_rumah->values()->toArray();
-
-        // tanah
-        $tanah = $this->statistik->tanah();
-        $lebel_tanah = $tanah->keys()->toArray();
-        $value_tanah = $tanah->values()->toArray();
 
         return view('Guest', compact(
             'penduduk',
@@ -102,30 +60,6 @@ class GuestController extends Controller
             // pendidikan
             'lebel_pendidikan',
             'value_pendidikan',
-            // usaha
-            'lebel_usaha',
-            'value_usaha',
-            // bahan bakar
-            'lebel_bahan_bakar',
-            'value_bahan_bakar',
-            // kendaraan
-            'lebel_kendaraan',
-            'value_kendaraan',
-            // elektronik
-            'lebel_elektronik',
-            'value_elektronik',
-            // ternak
-            'lebel_ternak',
-            'value_ternak',
-            // rumah
-            'lebel_rumah',
-            'value_rumah',
-            // tipe_rumah,
-            'lebel_tipe_rumah',
-            'value_tipe_rumah',
-            // tanah
-            'lebel_tanah',
-            'value_tanah',
 
         ));
     }

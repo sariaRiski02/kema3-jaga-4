@@ -5,7 +5,11 @@
     <span>Tambah Data Warga Manual</span>
   </h2>
 
+  <!-- Error Message -->
+  <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-base font-medium"></div>
+
   <form action="#" method="POST" class="space-y-6 sm:space-y-10" id="addResidentForm">
+    <input type="hidden" id="edit_id" name="edit_id" value="">
     <!-- Warga -->
     <div class="border border-purple-300 rounded-lg p-4 mb-4">
       <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
@@ -111,120 +115,13 @@
       </div>
     </div>
 
-    <!-- Rumah -->
-    <div class="border border-purple-300 rounded-lg p-4 mb-4">
-      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <span>🏠</span>
-        <span>Kepemilikan Rumah</span>
-      </h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label for="status_rumah" class="block text-sm font-medium text-purple-700 mb-1">Status Rumah</label>
-          <select id="status_rumah" class="input px-4 py-3 w-full">
-            <option value="">Status Rumah</option>
-            <option value="milik_sendiri">Milik Sendiri</option>
-            <option value="sewa">Sewa</option>
-            <option value="kontrak">Kontrak</option>
-            <option value="numpang">Numpang</option>
-          </select>
-        </div>
-        <div>
-          <label for="tipe_rumah" class="block text-sm font-medium text-purple-700 mb-1">Tipe Rumah</label>
-          <select id="tipe_rumah" class="input px-4 py-3 w-full">
-            <option value="">Tipe Rumah</option>
-            <option value="permanen">Permanen</option>
-            <option value="semi_permanen">Semi Permanen</option>
-            <option value="non_permanen">Non Permanen</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Kendaraan -->
-    <div class="border border-purple-300 rounded-lg p-4 mb-4">
-      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <span>🚗</span>
-        <span>Kepemilikan Kendaraan</span>
-      </h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label for="motor_roda2" class="block text-sm font-medium text-purple-700 mb-1">Motor Roda 2</label>
-          <input type="number" id="motor_roda2" placeholder="Motor Roda 2" class="input px-4 py-3 w-full" min="0">
-        </div>
-        <div>
-          <label for="mobil_roda4" class="block text-sm font-medium text-purple-700 mb-1">Mobil Roda 4</label>
-          <input type="number" id="mobil_roda4" placeholder="Mobil Roda 4" class="input px-4 py-3 w-full" min="0">
-        </div>
-        <div>
-          <label for="bus_truk" class="block text-sm font-medium text-purple-700 mb-1">Bus/Truk</label>
-          <input type="number" id="bus_truk" placeholder="Bus/Truk" class="input px-4 py-3 w-full" min="0">
-        </div>
-      </div>
-    </div>
-
-    <!-- Usaha -->
-    <div class="border border-purple-300 rounded-lg p-4 mb-4">
-      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <span>💼</span>
-        <span>Jenis Usaha</span>
-      </h3>
-      <div>
-        <label for="jenis_usaha" class="block text-sm font-medium text-purple-700 mb-1">Jenis Usaha</label>
-        <input type="text" id="jenis_usaha" placeholder="Jenis Usaha (kosongkan jika tidak ada)" class="input w-full px-4 py-3">
-      </div>
-    </div>
-
-    <!-- Bahan Bakar -->
-    <div class="border border-purple-300 rounded-lg p-4 mb-4">
-      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <span>⛽</span>
-        <span>Penggunaan Bahan Bakar</span>
-      </h3>
-      <div class="flex flex-wrap gap-4 sm:gap-6">
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="gas" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Gas</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="kayu_bakar" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Kayu Bakar</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="minyak_tanah" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Minyak Tanah</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Sumber Air -->
-    <div class="border border-purple-300 rounded-lg p-4 mb-4">
-      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
-        <span>💧</span>
-        <span>Sumber Air</span>
-      </h3>
-      <div class="flex flex-wrap gap-4 sm:gap-6">
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="sumur" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Sumur</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="mata_air" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Mata Air</span>
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" id="air_lainnya" class="w-4 h-4 text-purple-600 rounded focus:ring-purple-500">
-          <span>Lainnya</span>
-        </label>
-      </div>
-    </div>
-
     <!-- Submit -->
     <div class="flex gap-4">
-      <button type="submit" id="submit" class="bg-purple-700 text-white px-6 py-3 rounded-lg hover:bg-purple-800 transition-all duration-200 flex items-center gap-2">
+      <button type="submit" id="submit" class="bg-purple-700 text-white px-6 py-3 rounded-lg hover:bg-purple-800 transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2">
         <span>💾</span>
-        <span>Simpan Data</span>
+        <span id="submit-label">Simpan Data</span>
       </button>
-      <button type="reset" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-all duration-200">
+      <button type="reset" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-all duration-200 shadow-md hover:shadow-lg">
         Reset Form
       </button>
     </div>

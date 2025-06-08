@@ -54,10 +54,13 @@ return new class extends Migration
                 'Tidak Sekolah',
                 'PAUD',
                 'TK',
-                'SD',
-                'SMP',
-                'SMA',
+                'SD/Sederajat',
+                'SMP/Sederajat',
+                'SMA/Sederajat',
+                'Diploma',
                 'Sarjana',
+                'Pascasarjana',
+                'Lainnya'
             ])->nullable(false);
             $table->foreignId('kk_id')
                 ->constrained('kk')

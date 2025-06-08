@@ -79,10 +79,13 @@ class WargaFactory extends Factory
                 'Tidak Sekolah',
                 'PAUD',
                 'TK',
-                'SD',
-                'SMP',
-                'SMA',
+                'SD/Sederajat',
+                'SMP/Sederajat',
+                'SMA/Sederajat',
+                'Diploma',
                 'Sarjana',
+                'Pascasarjana',
+                'Lainnya'
             ]),
             'agama' => $this->faker->randomElement([
                 'Islam',

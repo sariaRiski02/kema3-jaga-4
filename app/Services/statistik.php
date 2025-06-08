@@ -62,7 +62,6 @@ class statistik
     {
 
         // pekerjaan
-
         $pekerjaan_warga = $this->penduduk->pluck('pekerjaan')->countBy()->sortDesc();
 
         // ambil 4 teratas
@@ -93,12 +92,16 @@ class statistik
     {
         $item = $this->penduduk->pluck('pendidikan')->countBy();
         $pendidikan = collect([
-            'Tidak Sekolah' => $item['Tidak Sekolah'],
-            'PAUD' => $item['PAUD'],
-            'SD' => $item['SD'],
-            'SMP' => $item['SMP'],
-            'SMA' => $item['SMA'],
-            'Sarjana' => $item['Sarjana'],
+            'Tidak Sekolah'    => $item['Tidak Sekolah'] ?? 0,
+            'PAUD'             => $item['PAUD'] ?? 0,
+            'TK'               => $item['TK'] ?? 0,
+            'SD/Sederajat'     => $item['SD/Sederajat'] ?? 0,
+            'SMP/Sederajat'    => $item['SMP/Sederajat'] ?? 0,
+            'SMA/Sederajat'    => $item['SMA/Sederajat'] ?? 0,
+            'Diploma'          => $item['Diploma'] ?? 0,
+            'Sarjana'          => $item['Sarjana'] ?? 0,
+            'Pascasarjana'     => $item['Pascasarjana'] ?? 0,
+            'Lainnya'          => $item['Lainnya'] ?? 0,
         ]);
 
         $lebel_pendidikan = $pendidikan->keys()->toArray();
@@ -109,86 +112,5 @@ class statistik
             'lebel_pendidikan' => $lebel_pendidikan,
             'value_pendidikan' => $value_pendidikan
         ]);
-    }
-
-    public function usaha()
-    {
-        $allUsaha = Usaha::pluck('jenis_usaha')->countBy()->sortDesc();
-        $param = 4;
-        $usaha = $allUsaha->take($param);
-
-        // Mengambil sisa data setelah 4 teratas
-        $sisaUsaha = $allUsaha->slice($param);
-        $jumlahSisa = $sisaUsaha->sum();
-
-        // Tambahkan 'lainnya' jika ada sisa
-        if ($jumlahSisa > 0) {
-            $usaha['lainnya'] = $jumlahSisa;
-        }
-        return $usaha;
-    }
-
-    public function bahan_bakar()
-    {
-        $fields = ['solar', 'minyak_tanah', 'kayu_bakar', 'gas', 'lainnya'];
-        $bahan_bakar = [];
-        foreach ($fields as $field) {
-            $bahan_bakar[$field] = PenggunaanBahanBakar::where($field, true)->count();
-        }
-
-        return collect($bahan_bakar);
-    }
-
-    public function kendaraan()
-    {
-        $fields = ['roda_2', 'roda_4', 'bus/truk', 'lainnya'];
-        $kendaraan = [];
-        foreach ($fields as $field) {
-            $kendaraan[$field] = Kendaraan::where($field, '!=', 0)->sum($field);
-        }
-        return collect($kendaraan);
-    }
-
-    public function elektronik()
-    {
-
-        $elektronik = KepemilikanElektronik::pluck('jenis_elektronik')->countBy()->sortDesc();
-        $param = 4;
-        $paramElek = $elektronik->take($param);
-        if ($paramElek->count() > 0) {
-            $paramElek['lainnya'] = $elektronik->slice($param)->sum();
-        }
-
-        return $paramElek;
-    }
-
-
-    public function ternak()
-    {
-        $ternak = KepemilikanTernak::pluck('jenis_ternak')->countBy()->sortDesc();
-        return $ternak;
-    }
-
-    public function rumah()
-    {
-        $rumah = KepemilikanRumah::pluck('status_rumah')->countBy()->sortDesc();
-        return $rumah;
-    }
-
-    public function tipe_rumah()
-    {
-        $rumah = KepemilikanRumah::pluck('tipe_rumah')->countBy()->sortDesc();
-        return $rumah;
-    }
-
-    public function tanah()
-    {
-        $tanah = KepemelikanTanah::pluck('jenis_tanah')->countBy()->sortDesc();
-        $param = 4;
-        $paramTanah = $tanah->take($param);
-        if ($paramTanah->count() > 0) {
-            $paramTanah['lainnya'] = $tanah->slice($param)->sum();
-        }
-        return $paramTanah;
     }
 }
