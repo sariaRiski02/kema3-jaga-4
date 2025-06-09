@@ -6,8 +6,11 @@ use App\Models\Kk;
 use Carbon\Carbon;
 use App\Models\Warga;
 // use Illuminate\Container\Attributes\Log;
-use Illuminate\Support\Facades\Log;
+use App\Exports\WargaExport;
+use App\Imports\WargaImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
@@ -115,11 +118,24 @@ class ApiController extends Controller
 
     public function store(Request $request)
     {
+        // Normalisasi enum ke lowercase
+        $enumFields = [
+            'jenis_kelamin',
+            'status_keluarga',
+            'agama',
+            'status_perkawinan',
+            'pendidikan'
+        ];
+        foreach ($enumFields as $field) {
+            if ($request->has($field)) {
+                $request[$field] = strtolower(trim($request[$field]));
+            }
+        }
 
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:20|unique:warga,nik',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
             'tempat_lahir' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'tanggal_kematian' => 'nullable|date|after:tanggal_lahir',
@@ -127,13 +143,9 @@ class ApiController extends Controller
             'status_keluarga' => 'required|string|max:50',
             'pekerjaan' => 'nullable|string|max:100',
             'agama' => 'required|string|max:50',
-            'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
-            'pendidikan' => 'required|string|max:100|in:Tidak Sekolah,PAUD,TK,SD/Sederajat,SMP/Sederajat,SMA/Sederajat,Diploma,Sarjana,Pascasarjana,Lainnya',
+            'status_perkawinan' => 'required|in:belum kawin,kawin,cerai hidup,cerai mati',
+            'pendidikan' => 'required|string|max:100|in:tidak sekolah,paud,tk,sd/sederajat,smp/sederajat,sma/sederajat,diploma,sarjana,pascasarjana,lainnya',
             'no_kk' => 'required|string',
-
-
-
-
         ]);
 
         if ($validator->fails()) {
@@ -191,6 +203,19 @@ class ApiController extends Controller
                 'message' => "Data tidak ditemukan",
             ], 404);
         }
+        // Normalisasi enum ke lowercase
+        $enumFields = [
+            'jenis_kelamin',
+            'status_keluarga',
+            'agama',
+            'status_perkawinan',
+            'pendidikan'
+        ];
+        foreach ($enumFields as $field) {
+            if ($request->has($field)) {
+                $request[$field] = strtolower(trim($request[$field]));
+            }
+        }
 
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
@@ -245,4 +270,61 @@ class ApiController extends Controller
             'data' => $warga
         ]);
     }
+
+    /**
+     * Import data warga dari file Excel
+     */
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv,txt|max:10240',
+        ]);
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\WargaImport, $request->file('file'));
+            return response()->json([
+                'success' => true,
+                'message' => 'Data warga berhasil diimport.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal import: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // fitur belum jalan
+    public function getFamilyMembers($no_kk)
+    {
+        $kk = Kk::where('no_kk', $no_kk)->first();
+
+        if (!$kk) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nomor KK tidak ditemukan'
+            ], 404);
+        }
+
+        // Get family members sorted by status (kepala keluarga first)
+        $familyMembers = $kk->warga()
+            ->orderByRaw("CASE 
+                WHEN LOWER(status_keluarga) = 'kepala keluarga' THEN 1
+                WHEN LOWER(status_keluarga) = 'istri' THEN 2
+                WHEN LOWER(status_keluarga) = 'anak' THEN 3
+                ELSE 4 END")
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'no_kk' => $kk->no_kk,
+                'members' => $familyMembers
+            ]
+        ]);
+    }
+    // end fitur belum jalan
+
+
+
+
 }

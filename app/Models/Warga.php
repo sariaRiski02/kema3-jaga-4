@@ -33,14 +33,27 @@ class Warga extends Model
     ];
     public function getUmurAttribute()
     {
-        if (!$this->tanggal_kematian) {
-
-            return Carbon::parse($this->tanggal_lahir)->age;
+        // Validasi tanggal lahir agar formatnya benar (Y-m-d atau d/m/Y)
+        $tgl = $this->tanggal_lahir;
+        if (!$tgl) return null;
+        // Cek format: jika d/m/Y, konversi ke Y-m-d
+        if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $tgl)) {
+            [$d, $m, $y] = explode('/', $tgl);
+            $tgl = "$y-$m-$d";
         }
-
-        $tanggal_lahir = Carbon::parse($this->tanggal_lahir);
-        $tanggal_kematian = Carbon::parse($this->tanggal_kematian);
-
+        // Jika sudah Y-m-d, biarkan
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $tgl)) return null;
+        if (!$this->tanggal_kematian) {
+            return Carbon::parse($tgl)->age;
+        }
+        $tgl_kematian = $this->tanggal_kematian;
+        if ($tgl_kematian && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $tgl_kematian)) {
+            [$d, $m, $y] = explode('/', $tgl_kematian);
+            $tgl_kematian = "$y-$m-$d";
+        }
+        if ($tgl_kematian && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $tgl_kematian)) return null;
+        $tanggal_lahir = Carbon::parse($tgl);
+        $tanggal_kematian = Carbon::parse($tgl_kematian);
         $umur_hidup = $tanggal_lahir->diffInYears($tanggal_kematian);
         return 'Umur Hidup: ' . round($umur_hidup);
     }
@@ -48,50 +61,5 @@ class Warga extends Model
     public function kk()
     {
         return $this->belongsTo(Kk::class);
-    }
-
-    public function usaha()
-    {
-        return $this->hasMany(Usaha::class);
-    }
-
-    public function penggunaan_bahan_bakar()
-    {
-        return $this->hasOne(PenggunaanBahanBakar::class);
-    }
-
-    public function kendaraan()
-    {
-        return $this->hasOne(Kendaraan::class);
-    }
-
-    public function penggunaan_air()
-    {
-        return $this->hasOne(PenggunaanAir::class);
-    }
-
-    public function kepemilikan_tanah()
-    {
-        return $this->hasMany(KepemelikanTanah::class);
-    }
-
-    public function wc_kamar_mandi()
-    {
-        return $this->hasOne(WcKamarMandi::class);
-    }
-
-    public function kepemilikan_rumah()
-    {
-        return $this->hasMany(KepemilikanRumah::class);
-    }
-
-    public function kepemilikan_ternak()
-    {
-        return $this->hasMany(KepemilikanTernak::class);
-    }
-
-    public function kepemilikan_elektronik()
-    {
-        return $this->hasMany(KepemilikanElektronik::class);
     }
 }

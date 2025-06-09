@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Kk;
 use App\Services\statistik;
+use App\Exports\WargaExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Services\dashboard_statistik;
 
 class DashboardController extends Controller
@@ -32,5 +34,10 @@ class DashboardController extends Controller
                 'keluarga',
             )
         );
+    }
+
+    public function download_all()
+    {
+        return Excel::download(new WargaExport, 'data_warga.xlsx');
     }
 }

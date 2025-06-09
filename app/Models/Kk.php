@@ -12,6 +12,7 @@ class Kk extends Model
     use HasFactory;
 
     protected $table = "kk";
+    protected $fillable = ["no_kk"];
     public function warga()
     {
         return $this->hasMany(Warga::class);

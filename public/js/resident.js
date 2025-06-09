@@ -13,6 +13,12 @@ export function fetchData(page = 1){
     }
     });
 }
+
+function capitalizeWords(str) {
+    if (!str) return '';
+    return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 export function render (response){
     let data = response.data.data;
     // Hitung nomor awal berdasarkan halaman dan jumlah per halaman
@@ -28,7 +34,7 @@ export function render (response){
                     <td class="px-3 sm:px-4 py-3 border">${number++}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nik}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nama}</td>
-                    <td class="px-3 sm:px-4 py-3 border">${warga.jenis_kelamin}</td>
+                    <td class="px-3 sm:px-4 py-3 border">${capitalizeWords(warga.jenis_kelamin)}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.umur} tahun</td>
                     <td class="px-3 sm:px-4 py-3 border text-center">
                     <div class="flex justify-center gap-2">

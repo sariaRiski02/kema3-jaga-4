@@ -17,7 +17,7 @@ class KkSeeder extends Seeder
         Kk::factory()->count(50)->create()->each(function ($kk) {
             Warga::factory()->create([
                 'kk_id' => $kk->id,
-                'status_keluarga' => 'Kepala Keluarga',
+                'status_keluarga' => 'kepala keluarga', // lowercase sesuai enum migration
             ]);
 
             Warga::factory()->count(rand(2, 5))->create([

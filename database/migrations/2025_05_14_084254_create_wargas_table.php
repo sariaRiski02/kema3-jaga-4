@@ -15,52 +15,53 @@ return new class extends Migration
             $table->id();
             $table->string('nama')->nullable(false);
             $table->string('nik')->unique()->index()->nullable();
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable(false);
+            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan'])->nullable(false);
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->date('tanggal_kematian')->nullable();
             $table->string('alamat')->nullable(false);
             $table->enum('status_keluarga', [
-                'Kepala Keluarga',
-                'Istri',
-                'Anak',
-                'Orang Tua',
-                'Mertua',
-                'Cucu',
-                'Menantu',
-                'Paman',
-                'Bibi',
-                'Pembantu',
-                'Keponakan',
-                'Sepupu',
-                'Lainnya'
+                'kepala keluarga',
+                'istri',
+                'anak',
+                'orang tua',
+                'mertua',
+                'cucu',
+                'menantu',
+                'paman',
+                'bibi',
+                'pembantu',
+                'keponakan',
+                'sepupu',
+                'lainnya'
             ])->nullable();
             $table->string('pekerjaan')->nullable();
             $table->enum('agama', [
-                'Islam',
-                'Kristen',
-                'Buddha',
-                'Hindu',
-                'Konghucu',
-                'Lainnya'
+                'islam',
+                'kristen',
+                'katolik',
+                'buddha',
+                'hindu',
+                'konghucu',
+                'lainnya'
             ])->nullable();
             $table->enum('status_perkawinan', [
-                'Belum Kawin',
-                'Kawin',
-                'Cerai Hidup',
-                'Cerai Mati'
+                'belum kawin',
+                'kawin',
+                'cerai hidup',
+                'cerai mati'
             ])->nullable();
             $table->enum('pendidikan', [
-                'Tidak Sekolah',
-                'PAUD',
-                'TK',
-                'SD/Sederajat',
-                'SMP/Sederajat',
-                'SMA/Sederajat',
-                'Diploma',
-                'Sarjana',
-                'Pascasarjana',
-                'Lainnya'
+                'tidak sekolah',
+                'paud',
+                'tk',
+                'sd/sederajat',
+                'smp/sederajat',
+                'sma/sederajat',
+                'diploma',
+                'sarjana',
+                'pascasarjana',
+                'lainnya'
             ])->nullable(false);
             $table->foreignId('kk_id')
                 ->constrained('kk')

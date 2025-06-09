@@ -11,7 +11,12 @@ $('#tableBody').on('click', '.btn-see', function(){
     }
     
     });
-})
+});
+
+function capitalizeWords(str) {
+    if (!str) return '';
+    return str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
 
 function htmlScript(warga){
     const [tahun, bulan, tanggalHari] = warga.tanggal_lahir.split('-');
@@ -51,7 +56,7 @@ function htmlScript(warga){
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Jenis Kelamin</th>
-                        <td class="px-4 py-2">${warga.jenis_kelamin}</td>
+                        <td class="px-4 py-2">${capitalizeWords(warga.jenis_kelamin)}</td>
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Tempat Lahir</th>
@@ -71,7 +76,7 @@ function htmlScript(warga){
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Status Keluarga</th>
-                        <td class="px-4 py-2">${warga.status_keluarga ?? '-'}</td>
+                        <td class="px-4 py-2">${capitalizeWords(warga.status_keluarga)}</td>
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Alamat</th>
@@ -79,11 +84,11 @@ function htmlScript(warga){
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Agama</th>
-                        <td class="px-4 py-2">${warga.agama ?? '-'}</td>
+                        <td class="px-4 py-2">${capitalizeWords(warga.agama)}</td>
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Pendidikan</th>
-                        <td class="px-4 py-2">${warga.pendidikan ?? '-'}</td>
+                        <td class="px-4 py-2">${capitalizeWords(warga.pendidikan)}</td>
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Pekerjaan</th>
@@ -91,7 +96,7 @@ function htmlScript(warga){
                     </tr>
                     <tr>
                         <th class="px-4 py-2 bg-gray-100 font-semibold">Status Perkawinan</th>
-                        <td class="px-4 py-2">${warga.status_perkawinan ?? '-'}</td>
+                        <td class="px-4 py-2">${capitalizeWords(warga.status_perkawinan)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -103,7 +108,7 @@ function htmlScript(warga){
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 16h8M8 12h8m-7 8h6a2 2 0 002-2V6a2 2 0 00-2-2H8a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Copy Detail
+                <span>Copy Detail</span>
             </button>
         </div>
     `;

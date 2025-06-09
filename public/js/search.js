@@ -5,12 +5,13 @@ $('#searchInput').on('keyup', function(){
     let query = $(this).val();
     
     $.ajax({
-        url: '/api/resident/search',
+        url: '/api/search',
         type: 'GET',
         data: {
             q: query
         },
         success: function(response){
+            console.log(response);
             render(response);
             renderPagination(response.data);
         },

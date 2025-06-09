@@ -98,7 +98,7 @@
       </div>
       </div>
       <div class="flex justify-end m-5">
-      <a href="" class=" bg-blue-600 hover:bg-blue-700 
+      <a href="{{ route('download-warga') }}" class=" bg-blue-600 hover:bg-blue-700 
       text-white px-5 py-2 
       rounded-lg font-semibold flex items-center gap-2 
       shadow transition-all duration-200">
@@ -128,6 +128,17 @@
   <span>Mengirim data...</span>
 </div>
 
+<!-- Global Loading Overlay -->
+<div id="globalLoading" class="fixed inset-0 bg-black bg-opacity-40 items-center justify-center z-50 hidden">
+  <div class="flex flex-col items-center gap-4">
+    <svg class="animate-spin h-12 w-12 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+    </svg>
+    <span class="text-lg text-white font-semibold drop-shadow">Memproses data, mohon tunggu...</span>
+  </div>
+</div>
+
   <footer class="bg-white shadow mt-8 sm:mt-12 py-4 text-center text-sm text-gray-500">
     &copy; created by rizky saria
   </footer>
@@ -140,7 +151,8 @@
   <script src="{{ asset('/js/actions/Detail.mjs') }}" type="module"></script>
   <script src="{{ asset('/js/actions/Edit.mjs') }}" type="module"></script>
   <script src="{{ asset('/js/search.js') }}" type="module"></script>
-  <script src="{{ asset('js/input.js') }}" type="module"></script>
+  <script src="{{ asset('/js/input.js') }}" type="module"></script>
+  <script src="{{ asset('js/file.js') }}"></script>
 
 </body>
 </html>
