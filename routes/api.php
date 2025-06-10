@@ -23,3 +23,4 @@ Route::get('/template-warga-csv', function () {
 });
 
 Route::get('/download', [ApiController::class, 'download_all']);
+Route::get('/family/{no_kk}', [ApiController::class, 'getFamilyMembers']);

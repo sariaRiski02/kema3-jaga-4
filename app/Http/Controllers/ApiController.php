@@ -17,10 +17,10 @@ class ApiController extends Controller
 {
     public function getAllResident()
     {
-        $data = Warga::latest()->paginate(20);
+        $data = Warga::with('kk')->latest()->paginate(20);
         if (!$data) {
             return response()->json([
-                'succes' => false,
+                'success' => false,
                 'message' => 'Data residen Kosong'
             ], 404);
         }
@@ -293,9 +293,10 @@ class ApiController extends Controller
         }
     }
 
-    // fitur belum jalan
+    // Mendapatkan semua anggota keluarga berdasarkan no_kk
     public function getFamilyMembers($no_kk)
     {
+
         $kk = Kk::where('no_kk', $no_kk)->first();
 
         if (!$kk) {
@@ -307,13 +308,8 @@ class ApiController extends Controller
 
         // Get family members sorted by status (kepala keluarga first)
         $familyMembers = $kk->warga()
-            ->orderByRaw("CASE 
-                WHEN LOWER(status_keluarga) = 'kepala keluarga' THEN 1
-                WHEN LOWER(status_keluarga) = 'istri' THEN 2
-                WHEN LOWER(status_keluarga) = 'anak' THEN 3
-                ELSE 4 END")
+            ->orderByRaw("CASE WHEN LOWER(status_keluarga) = 'kepala keluarga' THEN 1 WHEN LOWER(status_keluarga) = 'istri' THEN 2 WHEN LOWER(status_keluarga) = 'anak' THEN 3 ELSE 4 END")
             ->get();
-
         return response()->json([
             'success' => true,
             'data' => [
