@@ -55,7 +55,15 @@
             ❌
             </button>
           </div>
-         
+        </div>
+        <!-- Mass delete button and selected count moved here -->
+        <div id="massDeleteWrapper" class="flex justify-between items-center mb-2">
+          <button id="btn-hapus-massal" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full font-bold text-base shadow-lg transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-400" disabled>
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12' /></svg>
+            Hapus Terpilih
+          </button>
+          <span id="selectedCount" class="text-sm text-gray-600"></span>
+        </div>
       </div>
       <!-- Tambahkan wrapper overflow-x-auto agar tabel bisa di-scroll horizontal -->
       <div class="w-full overflow-x-auto">

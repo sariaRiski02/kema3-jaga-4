@@ -20,8 +20,8 @@ function showEditModal(data, id) {
               <span class="text-sm text-purple-700">Jenis Kelamin</span>
               <select id="edit_jenis_kelamin" class="input px-4 py-2 w-full">
                 <option value="">Pilih Jenis Kelamin</option>
-                <option value="Laki-laki" ${data.jenis_kelamin === 'Laki-laki' ? 'selected' : ''}>Laki-laki</option>
-                <option value="Perempuan" ${data.jenis_kelamin === 'Perempuan' ? 'selected' : ''}>Perempuan</option>
+                <option value="Laki-laki" ${data.jenis_kelamin === 'laki-laki' ? 'selected' : ''}>Laki-laki</option>
+                <option value="Perempuan" ${data.jenis_kelamin === 'perempuan' ? 'selected' : ''}>Perempuan</option>
               </select>
             </label>
             <label class="block">
@@ -30,19 +30,19 @@ function showEditModal(data, id) {
             </label>
             <label class="block">
               <span class="text-sm text-purple-700">Tanggal Lahir</span>
-              <input type="date" id="edit_tanggal_lahir" class="input px-4 py-2 w-full" value="${data.tanggal_lahir || ''}">
+              <input type="date" id="edit_tanggal_lahir" class="input px-4 py-2 w-full" value="${toInputDate(data.tanggal_lahir)}">
             </label>
             <label class="block">
               <span class="text-sm text-purple-700">Agama</span>
               <select id="edit_agama" class="input px-4 py-2 w-full">
                 <option value="">Pilih Agama</option>
-                <option value="Islam" ${data.agama === 'Islam' ? 'selected' : ''}>Islam</option>
-                <option value="Kristen" ${data.agama === 'Kristen' ? 'selected' : ''}>Kristen</option>
-                <option value="Katolik" ${data.agama === 'Katolik' ? 'selected' : ''}>Katolik</option>
-                <option value="Hindu" ${data.agama === 'Hindu' ? 'selected' : ''}>Hindu</option>
-                <option value="Buddha" ${data.agama === 'Buddha' ? 'selected' : ''}>Buddha</option>
-                <option value="Konghucu" ${data.agama === 'Konghucu' ? 'selected' : ''}>Konghucu</option>
-                <option value="Lainnya" ${data.agama === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+                <option value="Islam" ${data.agama === 'islam' ? 'selected' : ''}>Islam</option>
+                <option value="Kristen" ${data.agama === 'kristen' ? 'selected' : ''}>Kristen</option>
+                <option value="Katolik" ${data.agama === 'katolik' ? 'selected' : ''}>Katolik</option>
+                <option value="Hindu" ${data.agama === 'hindu' ? 'selected' : ''}>Hindu</option>
+                <option value="Buddha" ${data.agama === 'buddha' ? 'selected' : ''}>Buddha</option>
+                <option value="Konghucu" ${data.agama === 'konghucu' ? 'selected' : ''}>Konghucu</option>
+                <option value="Lainnya" ${data.agama === 'lainnya' ? 'selected' : ''}>Lainnya</option>
               </select>
             </label>
             <label class="block">
@@ -53,10 +53,10 @@ function showEditModal(data, id) {
               <span class="text-sm text-purple-700">Status Perkawinan</span>
               <select id="edit_status_perkawinan" class="input px-4 py-2 w-full">
                 <option value="">Status Perkawinan</option>
-                <option value="Belum Kawin" ${data.status_perkawinan === 'Belum Kawin' ? 'selected' : ''}>Belum Kawin</option>
-                <option value="Kawin" ${data.status_perkawinan === 'Kawin' ? 'selected' : ''}>Kawin</option>
-                <option value="Cerai Hidup" ${data.status_perkawinan === 'Cerai Hidup' ? 'selected' : ''}>Cerai Hidup</option>
-                <option value="Cerai Mati" ${data.status_perkawinan === 'Cerai Mati' ? 'selected' : ''}>Cerai Mati</option>
+                <option value="Belum Kawin" ${data.status_perkawinan === 'belum kawin' ? 'selected' : ''}>Belum Kawin</option>
+                <option value="Kawin" ${data.status_perkawinan === 'kawin' ? 'selected' : ''}>Kawin</option>
+                <option value="Cerai Hidup" ${data.status_perkawinan === 'cerai hidup' ? 'selected' : ''}>Cerai Hidup</option>
+                <option value="Cerai Mati" ${data.status_perkawinan === 'cerai mati' ? 'selected' : ''}>Cerai Mati</option>
               </select>
             </label>
             <label class="block">
@@ -67,18 +67,18 @@ function showEditModal(data, id) {
               <span class="text-sm text-purple-700">Status Dalam Keluarga</span>
               <select id="edit_status_keluarga" class="input px-4 py-2 w-full">
                 <option value="">Status Dalam Keluarga</option>
-                <option value="Kepala Keluarga" ${data.status_keluarga === 'Kepala Keluarga' ? 'selected' : ''}>Kepala Keluarga</option>
-                <option value="Istri" ${data.status_keluarga === 'Istri' ? 'selected' : ''}>Istri</option>
-                <option value="Anak" ${data.status_keluarga === 'Anak' ? 'selected' : ''}>Anak</option>
-                <option value="Orangtua" ${data.status_keluarga === 'Orangtua' ? 'selected' : ''}>Orangtua</option>
-                <option value="Mertua" ${data.status_keluarga === 'Mertua' ? 'selected' : ''}>Mertua</option>
-                <option value="Cucu" ${data.status_keluarga === 'Cucu' ? 'selected' : ''}>Cucu</option>
-                <option value="Lainnya" ${data.status_keluarga === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+                <option value="Kepala Keluarga" ${data.status_keluarga === 'kepala keluarga' ? 'selected' : ''}>Kepala Keluarga</option>
+                <option value="Istri" ${data.status_keluarga === 'istri' ? 'selected' : ''}>Istri</option>
+                <option value="Anak" ${data.status_keluarga === 'anak' ? 'selected' : ''}>Anak</option>
+                <option value="Orangtua" ${data.status_keluarga === 'orangtua' ? 'selected' : ''}>Orangtua</option>
+                <option value="Mertua" ${data.status_keluarga === 'mertua' ? 'selected' : ''}>Mertua</option>
+                <option value="Cucu" ${data.status_keluarga === 'cucu' ? 'selected' : ''}>Cucu</option>
+                <option value="Lainnya" ${data.status_keluarga === 'lainnya' ? 'selected' : ''}>Lainnya</option>
               </select>
             </label>
             <label class="block">
               <span class="text-sm text-purple-700">Tanggal Kematian</span>
-              <input type="date" id="edit_tanggal_kematian" class="input px-4 py-2 w-full" value="${data.tanggal_kematian || ''}">
+              <input type="date" id="edit_tanggal_kematian" class="input px-4 py-2 w-full" value="${toInputDate(data.tanggal_kematian)}">
             </label>
             <label class="block">
               <span class="text-sm text-purple-700">Alamat</span>
@@ -88,14 +88,14 @@ function showEditModal(data, id) {
               <span class="text-sm text-purple-700">Pendidikan Terakhir</span>
               <select id="edit_pendidikan" class="input px-4 py-2 w-full">
                 <option value="">Pilih Pendidikan</option>
-                <option value="Tidak Sekolah" ${data.pendidikan === 'Tidak Sekolah' ? 'selected' : ''}>Tidak Sekolah</option>
-                <option value="SD/Sederajat" ${data.pendidikan === 'SD/Sederajat' ? 'selected' : ''}>SD/Sederajat</option>
-                <option value="SMP/Sederajat" ${data.pendidikan === 'SMP/Sederajat' ? 'selected' : ''}>SMP/Sederajat</option>
-                <option value="SMA/Sederajat" ${data.pendidikan === 'SMA/Sederajat' ? 'selected' : ''}>SMA/Sederajat</option>
-                <option value="Diploma" ${data.pendidikan === 'Diploma' ? 'selected' : ''}>Diploma</option>
-                <option value="Sarjana" ${data.pendidikan === 'Sarjana' ? 'selected' : ''}>Sarjana</option>
-                <option value="Pascasarjana" ${data.pendidikan === 'Pascasarjana' ? 'selected' : ''}>Pascasarjana</option>
-                <option value="Lainnya" ${data.pendidikan === 'Lainnya' ? 'selected' : ''}>Lainnya</option>
+                <option value="tidak sekolah" ${data.pendidikan === 'tidak sekolah' ? 'selected' : ''}>tidak sekolah</option>
+                <option value="sd/sederajat" ${data.pendidikan === 'sd/sederajat' ? 'selected' : ''}>sd/sederajat</option>
+                <option value="smp/sederajat" ${data.pendidikan === 'smp/sederajat' ? 'selected' : ''}>smp/sederajat</option>
+                <option value="sma/sederajat" ${data.pendidikan === 'sma/sederajat' ? 'selected' : ''}>sma/sederajat</option>
+                <option value="diploma" ${data.pendidikan === 'diploma' ? 'selected' : ''}>diploma</option>
+                <option value="sarjana" ${data.pendidikan === 'sarjana' ? 'selected' : ''}>sarjana</option>
+                <option value="pascasarjana" ${data.pendidikan === 'pascasarjana' ? 'selected' : ''}>pascasarjana</option>
+                <option value="lainnya" ${data.pendidikan === 'lainnya' ? 'selected' : ''}>lainnya</option>
               </select>
             </label>
           </div>
@@ -181,7 +181,13 @@ $(document).on('submit', '#editResidentForm', function(e) {
         success: function(res) {
             if (res.success === true) {
                 closeEditModal();
-                alert('Data so berhasil diupdate!');
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Mantap!',
+                  text: 'Tu Data so ta update.',
+                  timer: 1800,
+                  showConfirmButton: false
+                });
                 window.location.href = '/dashboard';
             } else {
                 if (res.errors) {
@@ -196,6 +202,8 @@ $(document).on('submit', '#editResidentForm', function(e) {
             }
         },
         error: function(xhr) {
+
+            console.log(xhr.responseJSON);
             let html = '<div class="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded mb-2 text-sm">';
             if (xhr.responseJSON && xhr.responseJSON.errors) {
                 $.each(xhr.responseJSON.errors, function(field, val) {
@@ -210,3 +218,13 @@ $(document).on('submit', '#editResidentForm', function(e) {
         }
     });
 });
+
+function toInputDate(val) {
+    if (!val) return '';
+    // Jika sudah format YYYY-MM-DD, return langsung
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+    // Jika format d/m/Y, ubah ke Y-m-d
+    const match = val.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (match) return `${match[3]}-${match[2]}-${match[1]}`;
+    return '';
+}

@@ -26,11 +26,34 @@ export function render (response){
     const perPage = response.data.per_page || data.length || 1;
     let number = (currentPage - 1) * perPage + 1;
 
+    // Render header dengan checkbox select all
+    if ($('thead#mainThead').length === 0) {
+        $('table thead').remove();
+        $('table').prepend(`
+            <thead id="mainThead" class="bg-purple-100 text-purple-800">
+                <tr>
+                    <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">
+                        <input type="checkbox" id="selectAllWarga" class="custom-checkbox" style="width: 16px; height: 16px; accent-color: #7c3aed;">
+                    </th>
+                    <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">No</th>
+                    <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">NIK</th>
+                    <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Nama</th>
+                    <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Jenis Kelamin</th>
+                    <th class="px-3 sm:px-4 py-3 text-left border font-semibold text-sm sm:text-base">Umur</th>
+                    <th class="px-3 sm:px-4 py-3 text-center border font-semibold text-sm sm:text-base">Aksi</th>
+                </tr>
+            </thead>
+        `);
+    }
+
     if(response.success && Array.isArray(data)){
         $('#tableBody').empty();
         data.forEach((warga) => {
             $('#tableBody').append(
                 `<tr id="dataTable">
+                    <td class="px-3 sm:px-4 py-3 border text-center">
+                        <input type="checkbox" class="cb-warga custom-checkbox" value="${warga.id}" style="width: 16px; height: 16px; accent-color: #7c3aed;">
+                    </td>
                     <td class="px-3 sm:px-4 py-3 border">${number++}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nik}</td>
                     <td class="px-3 sm:px-4 py-3 border">${warga.nama}</td>
@@ -53,10 +76,72 @@ export function render (response){
                     </div>
                     </td>
                 </tr>`
-            )
+            );
         });
     }
+
+    // Update selected count
+    updateSelectedCount();
 }
+
+// Event: select all
+$(document).on('change', '#selectAllWarga', function(){
+    $('.cb-warga').prop('checked', this.checked);
+    updateSelectedCount();
+});
+// Event: per checkbox
+$(document).on('change', '.cb-warga', function(){
+    let all = $('.cb-warga').length;
+    let checked = $('.cb-warga:checked').length;
+    $('#selectAllWarga').prop('checked', all === checked);
+    updateSelectedCount();
+});
+// Update selected count
+function updateSelectedCount() {
+    let count = $('.cb-warga:checked').length;
+    if(count > 0) {
+        $('#selectedCount').text(count + ' data terpilih');
+        $('#btn-hapus-massal').prop('disabled', false).addClass('animate-bounce');
+        setTimeout(() => { $('#btn-hapus-massal').removeClass('animate-bounce'); }, 400);
+    } else {
+        $('#selectedCount').text('');
+        $('#btn-hapus-massal').prop('disabled', true);
+    }
+}
+// Event: hapus massal
+$(document).on('click', '#btn-hapus-massal', function(){
+    let ids = $('.cb-warga:checked').map(function(){ return $(this).val(); }).get();
+    if(ids.length === 0) {
+        Swal.fire('Pilih data yang ingin dihapus!', '', 'warning');
+        return;
+    }
+    Swal.fire({
+        title: 'Hapus Data Terpilih?',
+        text: 'Data yang dihapus tidak bisa dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: '/api/resident-mass',
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({ ids }),
+                success: function(res) {
+                    Swal.fire('Berhasil!', res.message, 'success');
+                    fetchData();
+                },
+                error: function(err) {
+                    Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+                }
+            });
+        }
+    });
+});
 
 export function renderPagination(response){
     $('#pagination').empty();

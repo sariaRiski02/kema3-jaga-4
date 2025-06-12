@@ -47,6 +47,8 @@ class GuestController extends Controller
 
 
 
+
+
         return view('Guest', compact(
             'penduduk',
             'kk',

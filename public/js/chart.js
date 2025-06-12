@@ -19,6 +19,7 @@ new Chart(document.getElementById("usiaChart"), {
     options: { responsive: true, maintainAspectRatio: false }
 });
 
+console.log(value_pendidikan);
 // Pendidikan
 new Chart(document.getElementById("pendidikanChart"), {
     type: "pie",
@@ -26,7 +27,18 @@ new Chart(document.getElementById("pendidikanChart"), {
         labels: lebel_pendidikan,
         datasets: [{
             data: value_pendidikan,
-            backgroundColor: ["#fcd34d", "#fbbf24", "#f59e0b", "#d97706", "#b45309", "#a3e635"]
+            backgroundColor: [
+                "#fcd34d", // kuning
+                "#fbbf24", // kuning tua
+                "#f59e0b", // oranye
+                "#d97706", // oranye tua
+                "#b45309", // coklat muda
+                "#a3e635", // hijau muda
+                "#4ade80", // hijau
+                "#38bdf8", // biru muda
+                "#818cf8", // ungu muda
+                "#f472b6"  // pink
+            ]
         }]
     },
     options: { responsive: true, maintainAspectRatio: false }

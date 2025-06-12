@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Warga;
 use App\Models\Kk;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -14,6 +15,8 @@ class WargaImport implements ToModel, WithHeadingRow
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+
+
     public function model(array $row)
     {
         // Normalisasi ke lowercase untuk enum agar konsisten dengan DB
@@ -34,6 +37,11 @@ class WargaImport implements ToModel, WithHeadingRow
                 }
             }
         }
+
+        if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $row['tanggal_lahir'])) {
+            $row['tanggal_lahir'] = Carbon::createFromFormat('d/m/Y', $row['tanggal_lahir'])->format('Y-m-d');
+        }
+
         // Cari atau buat KK
         $kk = Kk::firstOrCreate(['no_kk' => $row['no_kk']]);
         return new Warga([

@@ -3,15 +3,8 @@
 namespace App\Services;
 
 use Carbon\Carbon;
-use App\Models\Usaha;
 use App\Models\Warga;
-use App\Models\Kendaraan;
-use App\Models\KepemelikanTanah;
-use App\Models\KepemilikanTernak;
-use Illuminate\Support\Facades\DB;
-use App\Models\PenggunaanBahanBakar;
-use App\Models\KepemilikanElektronik;
-use App\Models\KepemilikanRumah;
+
 
 class statistik
 {
@@ -32,9 +25,6 @@ class statistik
 
     public function usia()
     {
-        // usia
-        // ["0–12 (Anak)", "13–18 (Remaja)", "19–59 (Dewasa)", "60+ (Lansia)"],
-
 
         $anak = $this->penduduk->where('usia', '<=', 12)->count();
         $remaja = $this->penduduk->where('usia', '>=', 13)->where('usia', '<=', 18)->count();
@@ -50,7 +40,6 @@ class statistik
         //  jenis kelamin
         $perempuan = $this->penduduk->where('jenis_kelamin', 'Perempuan')->count();
         $laki_laki = $this->penduduk->where('jenis_kelamin', 'Laki-Laki')->count();
-        $penduduk = $this->penduduk->count();
 
         return collect([
             'perempuan' => $perempuan,
@@ -90,19 +79,8 @@ class statistik
 
     public function pendidikan()
     {
-        $item = $this->penduduk->pluck('pendidikan')->countBy();
-        $pendidikan = collect([
-            'Tidak Sekolah'    => $item['Tidak Sekolah'] ?? 0,
-            'PAUD'             => $item['PAUD'] ?? 0,
-            'TK'               => $item['TK'] ?? 0,
-            'SD/Sederajat'     => $item['SD/Sederajat'] ?? 0,
-            'SMP/Sederajat'    => $item['SMP/Sederajat'] ?? 0,
-            'SMA/Sederajat'    => $item['SMA/Sederajat'] ?? 0,
-            'Diploma'          => $item['Diploma'] ?? 0,
-            'Sarjana'          => $item['Sarjana'] ?? 0,
-            'Pascasarjana'     => $item['Pascasarjana'] ?? 0,
-            'Lainnya'          => $item['Lainnya'] ?? 0,
-        ]);
+        $pendidikan = $this->penduduk->pluck('pendidikan')->countBy();
+
 
         $lebel_pendidikan = $pendidikan->keys()->toArray();
         $value_pendidikan = $pendidikan->values()->toArray();

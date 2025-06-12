@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kk;
-use Carbon\Carbon;
 use App\Models\Warga;
-// use Illuminate\Container\Attributes\Log;
-use App\Exports\WargaExport;
 use App\Imports\WargaImport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 
@@ -220,7 +216,7 @@ class ApiController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|max:20|unique:warga,nik,' . $id,
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
             'tempat_lahir' => 'required|string|max:100',
             'tanggal_lahir' => 'required|date',
             'tanggal_kematian' => 'nullable|date|after:tanggal_lahir',
@@ -228,8 +224,8 @@ class ApiController extends Controller
             'status_keluarga' => 'required|string|max:50',
             'pekerjaan' => 'nullable|string|max:100',
             'agama' => 'required|string|max:50',
-            'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
-            'pendidikan' => 'required|string|max:100|in:Tidak Sekolah,PAUD,TK,SD/Sederajat,SMP/Sederajat,SMA/Sederajat,Diploma,Sarjana,Pascasarjana,Lainnya',
+            'status_perkawinan' => 'required|in:belum kawin,kawin,cerai hidup,cerai mati',
+            'pendidikan' => 'required|string|max:100|in:tidak sekolah,paud,tk,sd/sederajat,smp/sederajat,sma/sederajat,diploma,sarjana,pascasarjana,lainnya',
             'no_kk' => 'required|string',
         ]);
 
@@ -241,14 +237,14 @@ class ApiController extends Controller
             ], 422);
         }
 
-        $kk = \App\Models\Kk::where('no_kk', $request->no_kk)->first();
+        $kk = Kk::where('no_kk', $request->no_kk)->first();
         if (!$kk) {
-            $kk = new \App\Models\Kk;
+            $kk = new Kk;
             $kk->no_kk = $request->no_kk;
             $kk->save();
         }
 
-        $warga->update([
+        $result = $warga->update([
             'nama' => $request->nama,
             'nik' => $request->nik,
             'jenis_kelamin' => $request->jenis_kelamin,
@@ -264,6 +260,12 @@ class ApiController extends Controller
             'kk_id' => $kk->id
         ]);
 
+        if (!$result) {
+            return response()->json([
+                'success' => false,
+                'message' => 'data gagal disimpan'
+            ]);
+        }
         return response()->json([
             'success' => true,
             'message' => 'Data warga berhasil diupdate',
@@ -280,7 +282,7 @@ class ApiController extends Controller
             'file' => 'required|file|mimes:xlsx,xls,csv,txt|max:10240',
         ]);
         try {
-            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\WargaImport, $request->file('file'));
+            Excel::import(new WargaImport, $request->file('file'));
             return response()->json([
                 'success' => true,
                 'message' => 'Data warga berhasil diimport.'
@@ -320,7 +322,20 @@ class ApiController extends Controller
     }
     // end fitur belum jalan
 
-
-
-
+    // Hapus data warga secara massal
+    public function massDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!is_array($ids) || empty($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada data yang dipilih untuk dihapus.'
+            ], 400);
+        }
+        $deleted = Warga::whereIn('id', $ids)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => "$deleted data berhasil dihapus."
+        ]);
+    }
 }

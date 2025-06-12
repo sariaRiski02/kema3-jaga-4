@@ -81,7 +81,15 @@ function fetch(){
             $("#loading").hide();
             if (res.success === true) {
                 clearFieldErrors();
-                alert('Data so berhasil disimpan!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Mantap!',
+                    text: 'Data so ta simpan!',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = '/dashboard';
+                });
                 window.location.href = '/dashboard';
             } else {
                 if (res.errors) {
@@ -97,7 +105,13 @@ function fetch(){
             if (xhr.responseJSON && xhr.responseJSON.errors) {
                 showFieldErrors(xhr.responseJSON.errors);
             } else {
-                alert('Aduh, ada error.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Aduh, ada error.',
+                    text: xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat menyimpan data.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             }
             console.error('Error:', error);
             console.error('Status:', status);
