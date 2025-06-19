@@ -1,8 +1,10 @@
+var apiKey = $('meta[name="api-key"]').attr('content');
 $("#no_kk").autocomplete({
     source: function(request, response) {
         $.ajax({
             url: "/api/no_kk",
             method: "POST",
+            headers: {'X-API-KEY' : apiKey},
             data: { term: request.term },
             success: function(res) {
                 if (res.data) {
@@ -49,6 +51,7 @@ function fetch(){
     $.ajax({
         url: '/api/resident',
         method: 'POST',
+        headers: {'X-API-KEY': apiKey},
         type: 'json',
         data: {
             nik: $("#nik").val(),

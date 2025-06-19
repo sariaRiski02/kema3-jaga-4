@@ -1,3 +1,5 @@
+var apiKey = $('meta[name="api-key"]').attr('content');
+
 // Script untuk fitur upload Excel di file.blade.php
 $(document).ready(function() {
     // Trigger file input saat klik tombol
@@ -41,6 +43,7 @@ $(document).ready(function() {
         $('#progressText').text('0%');
         $.ajax({
             url: '/api/import-excel',
+            headers: {'X-API-KEY' : apiKey},
             type: 'POST',
             data: formData,
             processData: false,

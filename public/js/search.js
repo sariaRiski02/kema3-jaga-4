@@ -1,12 +1,14 @@
 import { render, renderPagination } from "./resident.js";
 
-
+var apiKey = $('meta[name="api-key]').attr('content');
 $('#searchInput').on('keyup', function(){
     let query = $(this).val();
-    
     $.ajax({
         url: '/api/search',
         type: 'GET',
+        headers:{
+            'X-API-KEY': apiKey
+        },
         data: {
             q: query
         },

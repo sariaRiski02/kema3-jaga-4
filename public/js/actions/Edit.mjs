@@ -138,8 +138,14 @@ function translateError(msg) {
         .replace('The alamat field is required.', 'Alamat musti diisi.');
 }
 
+var apiKey = $('meta[input="api-key"]').attr('content');
 // Tampilkan modal saat klik edit
 $(document).on('click', '.btn-edit', function() {
+    $.ajaxSetup({
+      headers: {
+          'X-API-KEY': apiKey
+        }
+    });
     var id = $(this).data('id');
     $.get('/api/resident/' + id, function(res) {
         if (res.success && res.data) {
@@ -162,6 +168,9 @@ $(document).on('submit', '#editResidentForm', function(e) {
     $.ajax({
         url: '/api/resident/' + id,
         method: 'PUT',
+        headers: {
+            'X-API-KEY': apiKey
+        },
         type: 'json',
         data: {
             nik: $('#edit_nik').val(),

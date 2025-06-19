@@ -1,8 +1,12 @@
+var apiKey = $('meta[name="api-key"]').attr('content');
 $('#tableBody').on('click', '.btn-see', function(){
     var id = $(this).data('id');
     $.ajax({
         url: '/api/resident/' + id,
         method: 'GET',
+        headers: {
+            'X-API-KEY': apiKey
+        },
          success: function (response){
          see(response);
         },

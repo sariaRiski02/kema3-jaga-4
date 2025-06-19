@@ -1,11 +1,15 @@
 
 import {fetchData} from '../resident.js';
 
+var apiKey = $('meta[name="api-key"]').attr('content');
 // delete resident
 function deleteResident(id){
     $.ajax({
         url : `/api/resident/${id}`,
         method : 'DELETE',
+        headers: {
+            'X-API-KEY': apiKey
+        },
         success: function(response){
             Swal.fire("Mantap tu data so tahapus 👍");
         },

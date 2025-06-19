@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Dashboard Desa Kema 3 - Jaga 4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="api-key" content="{{ env('API_KEY') }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ asset('/styles/style.css') }}">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
@@ -13,9 +14,14 @@
   <header class="bg-purple-700 text-white shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
       <h1 class="text-xl sm:text-2xl font-bold text-center sm:text-left">Dashboard Desa Kema 3 – Jaga 4</h1>
-      <a href="/" class="bg-white text-purple-700 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition-all duration-200">
-        📊 Lihat Visualisasi
-      </a>
+      <div class="flex gap-2">
+        <a href="/" class="bg-white text-purple-700 font-semibold px-4 py-2 rounded-lg shadow hover:bg-gray-100 transition-all duration-200">
+          📊 Lihat Visualisasi
+        </a>
+        <a href="{{ route('logout') }}" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all duration-200">
+          🚪 Keluar
+        </a>
+      </div>
     </div>
   </header>
 
@@ -101,9 +107,7 @@
         </tr>
       </tbody>
       </table>
-      <div id="pagination" class="flex justify-center items-center gap-2 my-6">
-      
-      </div>
+      <div id="pagination" class="flex justify-center items-center gap-2 my-6"></div>
       </div>
       <div class="flex justify-end m-5">
       <a href="{{ route('download-warga') }}" class=" bg-blue-600 hover:bg-blue-700 

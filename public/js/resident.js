@@ -1,7 +1,10 @@
+var apiKey = $('meta[name="api-key"]').attr('content=');
+
 export function fetchData(page = 1){
     let endpoint = 'api/resident';
     $.ajax({
     url: endpoint + '?page=' + page,
+    headers: {'X-API-KEY' : apiKey},
     method: 'GET',
     dataType: 'json',
     success: function(response){
@@ -129,6 +132,7 @@ $(document).on('click', '#btn-hapus-massal', function(){
             $.ajax({
                 url: '/api/resident-mass',
                 method: 'DELETE',
+                headers: {'X-API-KEY' : apiKey},
                 contentType: 'application/json',
                 data: JSON.stringify({ ids }),
                 success: function(res) {
@@ -217,35 +221,35 @@ $(document).on('click', '.btn-kk', function(){
 function showKKModal(no_kk, members){
     let rows = members.map((w, idx) => `
         <tr>
-            <td class="border px-2 py-1 text-center">${idx+1}</td>
-            <td class="border px-2 py-1">${w.nik}</td>
-            <td class="border px-2 py-1">${w.nama}</td>
-            <td class="border px-2 py-1">${capitalizeWords(w.jenis_kelamin)}</td>
-            <td class="border px-2 py-1">${w.tempat_lahir}</td>
-            <td class="border px-2 py-1">${w.tanggal_lahir}</td>
-            <td class="border px-2 py-1">${capitalizeWords(w.status_keluarga)}</td>
-            <td class="border px-2 py-1">${w.pendidikan}</td>
-            <td class="border px-2 py-1">${w.pekerjaan}</td>
+            <td class="border px-2 py-1 text-center whitespace-nowrap">${idx+1}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.nik}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.nama}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${capitalizeWords(w.jenis_kelamin)}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.tempat_lahir}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.tanggal_lahir}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${capitalizeWords(w.status_keluarga)}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.pendidikan}</td>
+            <td class="border px-2 py-1 whitespace-nowrap">${w.pekerjaan}</td>
         </tr>
     `).join('');
     const html = `
-    <div class="overflow-x-auto">
+    <div class="w-full overflow-x-auto">
       <div class="mb-4 text-center">
         <span class="text-lg font-bold tracking-widest text-gray-700">KARTU KELUARGA</span><br>
         <span class="text-base font-semibold text-gray-600">No. KK: <span class="text-purple-700">${no_kk}</span></span>
       </div>
-      <table class="min-w-full border border-gray-400 rounded-lg text-xs sm:text-sm mb-2" id="kkTableCopy">
+      <table class="min-w-full border border-gray-400 rounded-lg text-xs sm:text-sm mb-2">
         <thead class="bg-gray-100">
           <tr>
-            <th class="border px-2 py-1">No</th>
-            <th class="border px-2 py-1">NIK</th>
-            <th class="border px-2 py-1">Nama</th>
-            <th class="border px-2 py-1">Jenis Kelamin</th>
-            <th class="border px-2 py-1">Tempat Lahir</th>
-            <th class="border px-2 py-1">Tanggal Lahir</th>
-            <th class="border px-2 py-1">Status Keluarga</th>
-            <th class="border px-2 py-1">Pendidikan</th>
-            <th class="border px-2 py-1">Pekerjaan</th>
+            <th class="border px-2 py-1 whitespace-nowrap">No</th>
+            <th class="border px-2 py-1 whitespace-nowrap">NIK</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Nama</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Jenis Kelamin</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Tempat Lahir</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Tanggal Lahir</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Status Keluarga</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Pendidikan</th>
+            <th class="border px-2 py-1 whitespace-nowrap">Pekerjaan</th>
           </tr>
         </thead>
         <tbody>
@@ -262,7 +266,11 @@ function showKKModal(no_kk, members){
     Swal.fire({
         title: 'Kartu Keluarga',
         html: html,
-        width: '60vw',
+        width: '100vw',
+        customClass: {
+            popup: 'rounded-xl p-0 max-w-full',
+            htmlContainer: 'p-0'
+        },
         showCloseButton: true,
         showConfirmButton: false,
         didOpen: () => {
@@ -286,9 +294,6 @@ function showKKModal(no_kk, members){
                     });
                 });
             });
-        },
-        customClass: {
-            popup: 'rounded-xl'
         }
     });
 }
