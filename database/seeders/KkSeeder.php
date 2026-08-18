@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Kk;
 use App\Models\Warga;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class KkSeeder extends Seeder
 {
@@ -14,15 +15,16 @@ class KkSeeder extends Seeder
      */
     public function run(): void
     {
-        Kk::factory()->count(50)->create()->each(function ($kk) {
-            Warga::factory()->create([
+       $kk = Kk::factory()->create();
+
+        $kepala = Warga::factory()
+            ->kepalaKeluarga()
+            ->create([
                 'kk_id' => $kk->id,
-                'status_keluarga' => 'kepala keluarga', // lowercase sesuai enum migration
             ]);
 
-            Warga::factory()->count(rand(2, 5))->create([
-                'kk_id' => $kk->id,
-            ]);
-        });
+        $kk->update([
+            'kepala_keluarga_id' => $kepala->id,
+        ]);
     }
 }

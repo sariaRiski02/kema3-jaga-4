@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('kk', function (Blueprint $table) {
             $table->id();
-            $table->string('no_kk', 16)->unique()->nullable(false);
+
+            $table->string('no_kk', 16)->unique();
+
+            $table->foreignId('kepala_keluarga_id')
+                ->constrained('wargas')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
             $table->timestamps();
         });
     }

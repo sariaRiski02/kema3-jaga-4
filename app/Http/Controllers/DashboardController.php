@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $keluarga = $this->dash_statistik->keluarga();
 
         return view(
-            'dashboard',
+            'dashboard.dashboard',
             compact(
                 'penduduk_aktif',
                 'semua_penduduk',
@@ -34,6 +34,15 @@ class DashboardController extends Controller
                 'keluarga',
             )
         );
+    }
+
+    public function tambahData(){
+        return view('dashboard.tambah-data');
+    }
+
+
+    public function dataWarga(){
+        return view('dashboard.data-warga');
     }
 
     public function download_all()

@@ -11,15 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('warga', function (Blueprint $table) {
+       Schema::create('warga', function (Blueprint $table) {
             $table->id();
-            $table->string('nama')->nullable(false);
-            $table->string('nik')->unique()->index()->nullable();
-            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan'])->nullable(false);
+            $table->string('nama');
+            $table->string('nik', 16)
+                ->unique();
+            $table->enum('jenis_kelamin', [
+                'laki-laki',
+                'perempuan'
+            ]);
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->date('tanggal_kematian')->nullable();
-            $table->string('alamat')->nullable(false);
+            $table->string('alamat')->nullable();
             $table->enum('status_keluarga', [
                 'kepala keluarga',
                 'istri',
@@ -33,9 +37,12 @@ return new class extends Migration
                 'pembantu',
                 'keponakan',
                 'sepupu',
+                'saudara',
                 'lainnya'
             ])->nullable();
+
             $table->string('pekerjaan')->nullable();
+
             $table->enum('agama', [
                 'islam',
                 'kristen',
@@ -45,13 +52,16 @@ return new class extends Migration
                 'konghucu',
                 'lainnya'
             ])->nullable();
+
             $table->enum('status_perkawinan', [
                 'belum kawin',
                 'kawin',
                 'cerai hidup',
                 'cerai mati'
             ])->nullable();
+
             $table->enum('pendidikan', [
+                'belum sekolah',
                 'tidak sekolah',
                 'paud',
                 'tk',
@@ -62,11 +72,13 @@ return new class extends Migration
                 'sarjana',
                 'pascasarjana',
                 'lainnya'
-            ])->nullable(false);
+            ])->nullable();
+
             $table->foreignId('kk_id')
                 ->constrained('kk')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
             $table->timestamps();
         });
     }
