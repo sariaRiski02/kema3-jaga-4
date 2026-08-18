@@ -43,7 +43,7 @@ class GuestController extends Controller
         $lebel_pendidikan = $pendidikan->get('lebel_pendidikan');
         $value_pendidikan = $pendidikan->get('value_pendidikan');
 
-        return view('Guest', compact(
+        return view('guest.main', compact(
             'penduduk',
             'kk',
             'klasifikasi_umur',
