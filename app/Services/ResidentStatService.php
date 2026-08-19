@@ -106,7 +106,7 @@ class ResidentStatService
     }
 
     public function getAll($trashed = false){
-        return $trashed ?  $this->Objresident->all() : $this->Objresident->withTrashed();
+        return $trashed ? $this->Objresident->withTrashed() :  $this->Objresident->all();
     }
 
     

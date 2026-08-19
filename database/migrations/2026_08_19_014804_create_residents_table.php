@@ -28,18 +28,19 @@ return new class extends Migration
                         'lainnya lain',
                         ];
         $education = [
-                    'Tidak Sekolah',
-                    'Belum Sekolah',
-                    'SD/sederajat',
-                    'SMP/sederajat',
-                    'SMA/sederajat',
-                    'SD', 
-                    'SMP', 
-                    'SMA', 
-                    'Diploma', 
-                    'Sarjana', 
-                    'Magister', 
-                    'Doktor',
+                    'tidak sekolah',
+                    'belum sekolah',
+                    'sd/sederajat',
+                    'smp/sederajat',
+                    'sma/sederajat',
+                    'sd', 
+                    'smp', 
+                    'sma', 
+                    'diploma', 
+                    'sarjana', 
+                    'magister', 
+                    'doktor',
+                    'lainnya'
                 ];
 
         Schema::create('residents', function (Blueprint $table) use ($family_relationships, $education) {

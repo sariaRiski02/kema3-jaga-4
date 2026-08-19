@@ -39,11 +39,11 @@ class ResidentFactory extends Factory
                 'saudara',
                 'lainnya lain',
             ]),
-            'occupation' => $this->faker->randomElement(['PNS', 'Wiraswasta', 'Petani', 'Nelayan', 'Pedagang', 'Guru', 'Dokter', 'Perawat', 'Polisi', 'TNI', 'Lainnya']),
-            'religion' => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']),
+            'occupation' => $this->faker->randomElement(['pns', 'wiraswasta', 'petani', 'nelayan', 'pedagang', 'guru', 'dokter', 'perawat', 'polisi', 'tni', 'lainnya']),
+            'religion' => $this->faker->randomElement(['islam', 'kristen', 'katolik', 'hindu', 'buddha', 'konghucu']),
             'gender' => $this->faker->randomElement(['laki-laki', 'perempuan']),
-            'marital_status' => $this->faker->randomElement(['Belum Kawin', 'Kawin', 'Cerai Hidup', 'Cerai Mati']),
-            'education' => $this->faker->randomElement(['Tidak Sekolah', 'Belum Sekolah', 'SD/sederajat', 'SMP/sederajat', 'SMA/sederajat', 'SD', 'SMP', 'SMA', 'Diploma', 'Sarjana', 'Magister', 'Doktor']),
+            'marital_status' => $this->faker->randomElement(['belum kawin', 'kawin', 'cerai hidup', 'cerai mati']),
+            'education' => $this->faker->randomElement(['tidak sekolah', 'belum sekolah', 'sd/sederajat', 'smp/sederajat', 'sma/sederajat', 'sd', 'smp', 'sma', 'diploma', 'sarjana', 'magister', 'doktor', 'lainnya']),
 
 
             // Assuming you have a Family model and you want to associate residents with families
