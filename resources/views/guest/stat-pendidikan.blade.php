@@ -4,11 +4,14 @@
     <canvas id="pendidikanChart" class="w-full max-h-[320px]"></canvas>
 </div>
 
+
 <script>
     // Pendidikan
+    var residentData = @json($resident->education_group());
     document.addEventListener('DOMContentLoaded', function () {
-        const lebel_pendidikan = window.appData?.lebel_pendidikan ?? [];
-        const value_pendidikan = window.appData?.value_pendidikan ?? [];
+        
+        const lebel_pendidikan = Object.keys(residentData);
+        const value_pendidikan = Object.values(residentData);
 
         const ctx = document.getElementById('pendidikanChart');
         if (ctx && window.Chart) {

@@ -39,8 +39,9 @@ class ResidentFactory extends Factory
                 'saudara',
                 'lainnya lain',
             ]),
-            'occupation' => $this->faker->jobTitle(),
+            'occupation' => $this->faker->randomElement(['PNS', 'Wiraswasta', 'Petani', 'Nelayan', 'Pedagang', 'Guru', 'Dokter', 'Perawat', 'Polisi', 'TNI', 'Lainnya']),
             'religion' => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']),
+            'gender' => $this->faker->randomElement(['laki-laki', 'perempuan']),
             'marital_status' => $this->faker->randomElement(['Belum Kawin', 'Kawin', 'Cerai Hidup', 'Cerai Mati']),
             'education' => $this->faker->randomElement(['Tidak Sekolah', 'Belum Sekolah', 'SD/sederajat', 'SMP/sederajat', 'SMA/sederajat', 'SD', 'SMP', 'SMA', 'Diploma', 'Sarjana', 'Magister', 'Doktor']),
 

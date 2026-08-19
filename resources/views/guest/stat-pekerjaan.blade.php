@@ -4,20 +4,24 @@
 </div>
 
 
+
 <script>
+    var occupation_group = @json($resident->occupation_group());
     document.addEventListener('DOMContentLoaded', function () {
-        const lebel_pekerjaan = window.appData?.lebel_pekerjaan ?? [];
-        const value_pekerjaan = window.appData?.value_pekerjaan ?? [];
+
+        
+        const lebel_pendidikan = Object.keys(occupation_group);
+        const value_pendidikan = Object.values(occupation_group);
 
         const ctx = document.getElementById('pekerjaanChart');
         if (ctx && window.Chart) {
             new Chart(ctx, {
-                type: 'bar',
+                type: 'pie',
                 data: {
-                    labels: lebel_pekerjaan,
+                    labels: lebel_pendidikan,
                     datasets: [{
                         label: 'Jumlah',
-                        data: value_pekerjaan,
+                        data: value_pendidikan,
                         backgroundColor: ['#a78bfa', '#34d399', '#fbbf24', '#60a5fa', '#f472b6', '#fca5a5']
                     }]
                 },

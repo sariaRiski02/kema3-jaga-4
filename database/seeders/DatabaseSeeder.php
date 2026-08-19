@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             Resident::factory(rand(1, 5))->create([
                 'family_id' => $family->id,
                 'family_relationship' => function () {
-                    return $this->faker->randomElement([
+                    return fake()->randomElement([
                         'suami',
                         'istri',
                         'anak',

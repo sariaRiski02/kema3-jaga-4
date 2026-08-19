@@ -2,37 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kk;
-use App\Services\statistik;
 use App\Exports\WargaExport;
+use App\Models\Family;
+use App\Services\ResidentStatService;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Services\dashboard_statistik;
+
 
 class DashboardController extends Controller
 {
-    protected $dash_statistik;
+    protected ResidentStatService $resident;
     public function __construct()
     {
-        $this->dash_statistik = new dashboard_statistik;
+        $this->resident = new ResidentStatService;
     }
     public function index()
     {
-        $penduduk_aktif = $this->dash_statistik->penduduk_aktif();
-        $semua_penduduk = $this->dash_statistik->semua_penduduk();
-        $laki_laki = $this->dash_statistik->jenis_kelamin()->values()[0];
-        $perempuan = $this->dash_statistik->jenis_kelamin()->values()[1];
-        $keluarga = $this->dash_statistik->keluarga();
 
+        $resident = $this->resident;
+        $family = Family::all();
         return view(
             'dashboard.dashboard',
             compact(
-                'penduduk_aktif',
-                'semua_penduduk',
-                'laki_laki',
-                'perempuan',
-                'keluarga',
+                'resident',
+                'family'
             )
+
         );
     }
 
@@ -41,7 +36,7 @@ class DashboardController extends Controller
     }
 
 
-    public function dataWarga(){
+    public function listResident(){
         return view('dashboard.data-warga');
     }
 
