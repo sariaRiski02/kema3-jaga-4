@@ -15,7 +15,7 @@
       <a href="{{ route('add-resident') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ➕ Tambah Data
       </a>
-      <a href="{{ route('download-warga') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
+      <a href="" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ⬇️ Download Excel
       </a>
     </div>
@@ -95,7 +95,7 @@
             <td class="px-4 py-3.5 text-center">
               <input type="checkbox" class="row-checkbox w-4 h-4 rounded border-gray-300 accent-purple-700">
             </td>
-            <td class="px-4 py-3.5 text-center">{{ $loop->iteration }}</td>
+            <td class="px-4 py-3.5 text-center">{{ $residents->firstItem() + $loop->index }}</td>
             <td class="px-4 py-3.5">
               <div class="font-medium text-gray-800"> {{ $resident->name }} </div>
               <div class="text-xs text-gray-400"> {{ $resident->place_of_birth }} </div>
@@ -156,7 +156,7 @@
       <a href="" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ➕ Tambah KK
       </a>
-      <a href="{{ route('download-warga') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
+      <a href="" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ⬇️ Download Excel
       </a>
     </div>

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\WargaExport;
+
 use App\Http\Requests\ResidentRequest;
+use App\Imports\ResidentImport;
 use App\Models\Family;
 use App\Services\ResidentService;
 use App\Services\ResidentStatService;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -33,6 +35,25 @@ class DashboardController extends Controller
         );
     }
 
+    public function importData(Request $request){
+        $request->validate([
+            'file' => [
+                'required',
+                'file',
+                'mimes:xlsx,xls,csv',
+                'max:10240'
+            ]
+        ]);
+        
+
+        Excel::import(new ResidentImport, $request->file('file'));
+
+        return back()->with('success', 'Data Warga Berhasil diimport');
+        // $path = $request->file('file')->store('imports');
+        
+        
+    }
+
     public function tambahData(){
         return view('dashboard.add-resident');
     }
@@ -43,7 +64,6 @@ class DashboardController extends Controller
         return redirect()->route('list-resident');
     }
 
-    
     public function updateData(){
         return view('dashboard.update-resident');
     }
@@ -54,8 +74,7 @@ class DashboardController extends Controller
         return view('dashboard.list-resident', compact('residents'));
     }
 
-    public function download_all()
-    {
-        return Excel::download(new WargaExport, 'data_warga.xlsx');
+    public function downloadTemplate(){
+        return response()->download(public_path('template_warga.xlsx'));
     }
 }

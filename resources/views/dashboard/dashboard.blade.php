@@ -54,7 +54,7 @@
     <div class="bg-purple-100 p-4 sm:p-5 rounded-xl text-center card-hover">
       <div class="text-2xl sm:text-3xl mb-2">🏠</div>
       <h4 class="text-sm sm:text-lg font-semibold text-purple-800 mb-1 sm:mb-2">Jumlah Keluarga</h4>
-      <p class="text-2xl sm:text-3xl font-bold text-purple-700" id="totalKeluarga">{{ $family->count() ?? 0}}</p>      
+      <p class="text-2xl sm:text-3xl font-bold text-purple-700" id="totalKeluarga">{{ $families->count() ?? 0}}</p>      
     </div>
 
 @endsection
