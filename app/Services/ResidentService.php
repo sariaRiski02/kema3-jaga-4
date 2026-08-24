@@ -18,18 +18,16 @@ class ResidentService
 
     public function store($request){
         Resident::create([
-            'nik' => $request['nik'] ?? '',
-            'name' => $request['name'] ?? '',
-            'gender' => $request['gender'] ?? '',
-            'place_of_birth' => $request['place_of_birth'] ?? '',
-            'date_of_birth' => $request['date_of_birth'] ?? '',
-            'date_of_death' => $request['date_of_death'] ?? '',
-            'religion' => $request['religion'] ?? '',
-            'address' => $request['address'] ?? '',
-            'education' => $request['education'] ?? '',
-            'family_relationship' => $request['family_relationship'] ?? '',
-            'marital_status' => $request['marital_status'] ?? '',
-            'occupation' => $request['occupation'] ?? ''
+            'nik' => $request['nik'] ?? null,
+            'name' => $request['name'] ?? null,
+            'gender' => $request['gender'] ?? null,
+            'place_of_birth' => $request['place_of_birth'] ?? null,
+            'date_of_birth' => $request['date_of_birth'] ?? null,
+            'date_of_death' => $request['date_of_death'] ?? null,
+            'religion' => $request['religion'] ?? null,
+            'address' => $request['address'] ?? null,
+            'education' => $request['education'] ?? null,
+            'occupation' => $request['occupation'] ?? null
         ]);
     }
 

@@ -75,7 +75,7 @@
           <th class="px-4 py-3.5 text-left font-semibold">NIK</th>
           <th class="px-4 py-3.5 text-left font-semibold">Jenis Kelamin</th>
           <th class="px-4 py-3.5 text-left font-semibold">Tanggal Lahir</th>
-          <th class="px-4 py-3.5 text-left font-semibold">Status Perkawinan</th>
+          <th class="px-4 py-3.5 text-left font-semibold">Umur</th>
           <th class="px-4 py-3.5 text-center font-semibold">Aksi</th>
         </tr>
       </thead>
@@ -105,12 +105,9 @@
             </span></td>
             <td class="px-4 py-3.5 text-gray-600"> {{ $resident->gender }} </td>
             <td class="px-4 py-3.5 text-gray-600"> {{ $resident->date_of_birth->format('d F Y') }} </td>
-            <td class="px-4 py-3.5">
-              <span class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-700">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                {{ $resident->marital_status }}
-              </span>
-            </td>
+            <td class="px-4 py-3.5"><span class="inline-block font-mono text-sm font-semibold text-gray-800 bg-gray-50 rounded px-3 py-1.5 tracking-wide">
+              {{ $resident->date_of_birth->age }} Tahun
+            </span></td>
             <td class="px-4 py-3.5">
               <div class="flex justify-center gap-1">
                 <button class="p-2 rounded-lg text-gray-400 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-150" title="Lihat Detail">👁️</button>

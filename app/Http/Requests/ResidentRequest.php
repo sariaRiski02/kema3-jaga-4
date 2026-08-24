@@ -22,20 +22,20 @@ class ResidentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nik' => ['required', 'digits:16'],
+            'nik' => ['required', 'digits:16', 'unique:residents,nik'],
             'name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'in:laki-laki,perempuan'],
             'place_of_birth' => ['required', 'string', 'max:255'],
             'date_of_birth' => ['required', 'date', 'before_or_equal:today'],
-            'religion' => ['required', 'in:islam,kristen,katolik,hindu,buddha,konghucu,lainnya'],
+            'religion' => ['nullable','in:islam,kristen,katolik,hindu,buddha,konghucu,lainnya'],
             'occupation' => ['nullable', 'string', 'max:255'],
             'marital_status' => ['nullable', 'in:belum kawin,kawin,cerai hidup,cerai mati'],
             'family_number' => ['nullable', 'digits:16'],
             'family_relationship' => ['nullable', 'in:kepala keluarga,istri,anak,orangtua,mertua,keponakan,cucu,saudara,lainnya'],
             'date_of_death' => ['nullable', 'date', 'after_or_equal:date_of_birth'],
-            'address' => ['required', 'string', 'max:255'],
+            'address' => ['nullable', 'string', 'max:255'],
             'education' => [
-                'required',
+                'nullable',
                 'in:tidak sekolah,sd,smp,sma,sd/sederajat,sma/sederajat,diploma,sarjana,magister,doktor,lainnya',
             ],
         ];
@@ -45,6 +45,7 @@ class ResidentRequest extends FormRequest
     {
         return [
             'required' => ':attribute wajib diisi.',
+            'unique' => ':attribute sudah terdaftar.',
             'string' => ':attribute harus berupa teks.',
             'max' => ':attribute maksimal :max karakter.',
             'digits' => ':attribute harus terdiri dari :digits digit.',

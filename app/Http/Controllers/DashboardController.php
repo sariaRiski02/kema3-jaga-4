@@ -35,6 +35,9 @@ class DashboardController extends Controller
         );
     }
 
+    public function show(){
+        return view('dashboard.show-resident');
+    }
     public function importData(Request $request){
         $request->validate([
             'file' => [

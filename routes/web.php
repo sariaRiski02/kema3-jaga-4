@@ -18,6 +18,7 @@ Route::get('/', [GuestController::class, 'index']);
 
     Route::get('/update-data', [DashboardController::class, 'updateData'])->name('update-resident');
     Route::get('/data-warga', [DashboardController::class, 'listResident'])->name('list-resident');
+    Route::get('/data-warga/warga-1/', [DashboardController::class, 'show'])->name('show-resident');
     
     Route::get('/logout', [GuestController::class, 'logout'])->name('logout');
 // });

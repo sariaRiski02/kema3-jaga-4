@@ -54,17 +54,17 @@
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="nik" class="block text-sm font-medium text-purple-700 mb-1">NIK</label>
+            <label for="nik" class="block text-sm font-medium text-purple-700 mb-1">NIK <span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
             <input type="text" id="nik" name="nik" value="{{ old('nik') }}" placeholder="NIK" class="input px-4 py-3 w-full" required maxlength="16" inputmode="numeric" pattern="[0-9]{16}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)">
             @error('nik') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="nama" class="block text-sm font-medium text-purple-700 mb-1">Nama Lengkap</label>
+            <label for="nama" class="block text-sm font-medium text-purple-700 mb-1">Nama Lengkap <span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
             <input type="text" id="nama" name="name" value="{{ old('name') }}" placeholder="Nama Lengkap" class="input px-4 py-3 w-full" required>
             @error('name') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="jenis_kelamin" class="block text-sm font-medium text-purple-700 mb-1">Jenis Kelamin</label>
+            <label for="jenis_kelamin" class="block text-sm font-medium text-purple-700 mb-1">Jenis Kelamin <span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
             <select id="jenis_kelamin" name="gender" class="input px-4 py-3 w-full" required>
               <option value="">Pilih Jenis Kelamin</option>
               <option value="laki-laki" @selected(old('gender') === 'laki-laki')>Laki-laki</option>
@@ -73,18 +73,18 @@
             @error('gender') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="tempat_lahir" class="block text-sm font-medium text-purple-700 mb-1">Tempat Lahir</label>
-            <input type="text" id="tempat_lahir" name="place_of_birth" value="{{ old('place_of_birth') }}" placeholder="Tempat Lahir" class="input px-4 py-3 w-full">
+            <label for="tempat_lahir" class="block text-sm font-medium text-purple-700 mb-1">Tempat Lahir  <span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
+            <input type="text" id="tempat_lahir" name="place_of_birth" value="{{ old('place_of_birth') }}" placeholder="Tempat Lahir" class="input px-4 py-3 w-full" required>
             @error('place_of_birth') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="tanggal_lahir" class="block text-sm font-medium text-purple-700 mb-1">Tanggal Lahir</label>
-            <input type="date" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" class="input px-4 py-3 w-full">
+            <label for="jenis_kelamin" class="block text-sm font-medium text-purple-700 mb-1">Tanggal Lahir<span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
+            <input type="date" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" class="input px-4 py-3 w-full" required>
             @error('date_of_birth') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
             <label for="agama" class="block text-sm font-medium text-purple-700 mb-1">Agama</label>
-            <select id="agama" name="religion" class="input px-4 py-3 w-full" required>
+            <select id="agama" name="religion" class="input px-4 py-3 w-full">
               <option value="">Pilih Agama</option>
               <option value="islam" @selected(old('religion') === 'islam')>Islam</option>
               <option value="kristen" @selected(old('religion') === 'kristen')>Kristen</option>
@@ -112,29 +112,7 @@
             </select>
             @error('marital_status') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
-          <div>
-            <label for="no_kk" class="block text-sm font-medium text-purple-700 mb-1">Nomor Kartu Keluarga (KK)</label>
-            <input type="text" id="no_kk" name="family_number" value="{{ old('family_number') }}" placeholder="Nomor Kartu Keluarga (KK)" class="input px-4 py-3 w-full" maxlength="16" inputmode="numeric" pattern="[0-9]{16}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)">
-            @error('family_number') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
-          </div>
-          <div>
-            <label for="status_keluarga" class="block text-sm font-medium text-purple-700 mb-1">Status Dalam Keluarga</label>
-            <select id="status_keluarga" name="family_relationship" class="input px-4 py-3 w-full">
-              <option value="">Status Dalam Keluarga</option>
-              <option value="kepala keluarga" @selected(old('family_relationship') === 'kepala Keluarga')>Kepala Keluarga</option>
-              <option value="istri" @selected(old('family_relationship') === 'istri')>Istri</option>
-              <option value="anak" @selected(old('family_relationship') === 'anak')>Anak</option>
-              <option value="orangtua" @selected(old('family_relationship') === 'orangtua')>Orangtua</option>
-              <option value="mertua" @selected(old('family_relationship') === 'mertua')>Mertua</option>
-              <option value="keponakan" @selected(old('family_relationship') === 'keponakan')>Keponakan</option>
-              <option value="cucu" @selected(old('family_relationship') === 'cucu')>Cucu</option>
-              <option value="saudara" @selected(old('family_relationship') === 'saudara')>Saudara</option>
-              <option value="lainnya" @selected(old('family_relationship') === 'lainnya')>Lainnya</option>
-            </select>
-            @error('family_relationship') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
-          </div>
           <div class="md:col-span-2">
-            
             <label for="tanggal_kematian" class="block text-sm font-medium text-purple-700 mb-1 flex items-center gap-1">
               <span>🪦</span>
               <span>Tanggal Kematian</span>
@@ -150,7 +128,7 @@
             @error('address') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="pendidikan" class="block text-sm font-medium text-purple-700 mb-1">Pendidikan Terakhir</label>
+            <label for="pendidikan" class="block text-sm font-medium text-purple-700 mb-1">Pendidikan</label>
             <select id="pendidikan" name="education" class="input px-4 py-3 w-full">
               <option value="">Pilih Pendidikan</option>
               <option value="tidak sekolah" @selected(old('education') === 'tidak sekolah')>Tidak Sekolah</option>
