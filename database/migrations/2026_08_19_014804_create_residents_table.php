@@ -12,21 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        $family_relationships = [
-                        'kepala keluarga', 
-                        'suami',
-                        'istri',
-                        'anak',
-                        'orang tua',
-                        'keponakan',
-                        'saudara',
-                        'sepupu',
-                        'mertua',
-                        'menantu',
-                        'cucu',
-                        'saudara',
-                        'lainnya lain',
-                        ];
+       
         $education = [
                     'tidak sekolah',
                     'belum sekolah',
@@ -41,9 +27,9 @@ return new class extends Migration
                     'magister', 
                     'doktor',
                     'lainnya'
-                ];
+            ];
 
-        Schema::create('residents', function (Blueprint $table) use ($family_relationships, $education) {
+        Schema::create('residents', function (Blueprint $table) use ($education) {
             $table->id();
             $table->string('name');
             $table->string('nik', 16)->nullable();
@@ -51,12 +37,10 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->date('date_of_death')->nullable();
             $table->string('address')->nullable();
-            $table->enum('family_relationship', $family_relationships)->nullable();
             $table->string('occupation')->nullable();
             $table->string('religion')->nullable();
             $table->string('marital_status')->nullable();
             $table->enum('education',$education)->nullable();
-            $table->foreignId('family_id')->nullable()->constrained('families')->onDelete('set null');
             $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
             $table->timestamps();
             $table->softDeletes();

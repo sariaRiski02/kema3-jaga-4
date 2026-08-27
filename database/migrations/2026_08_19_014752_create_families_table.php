@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('families', function (Blueprint $table) {
             $table->id();
             $table->string('family_number')->unique()->nullable();
-            $table->foreignId('head_of_family')->nullable()->constrained('residents')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });

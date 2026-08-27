@@ -5,6 +5,7 @@
 </div>
 
 
+
 <script>
     // Pendidikan
     var residentData = @json($resident->education_group());

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Family;
+use App\Models\FamilyRelationship;
+use App\Models\Resident;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,12 +25,10 @@ class Resident extends Model
         'date_of_birth',
         'date_of_death',
         'address',
-        'family_relationship',
         'occupation',
         'religion',
         'marital_status',
         'education',
-        'family_id',
         'gender',
     ];
 
@@ -38,15 +38,36 @@ class Resident extends Model
         'date_of_death' => 'date',
     ];
 
-    public function family()
-    {
-        return $this->belongsTo(Family::class);
-    }
-
     protected function age(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->date_of_birth ? $this->date_of_birth->diffInYears(now()) : null
+            get: function (){
+                if(!$this->date_of_birth){
+                    return null;
+                }
+                $diff = $this->date_of_birth->diff(now());
+
+                return (object) [
+                    'years' => $diff->y,
+                    'months' => $diff->m,
+                    'days' => $diff->d,
+                ];
+            }
+        );
+    }
+
+    public function familyRelationship(){
+        return $this->hasOne(FamilyRelationship::class);
+    }
+
+    public function family(){
+        return $this->hasOneThrough(
+            Family::class, 
+            FamilyRelationship::class,
+            'family_id',
+            'id',
+            'id',
+            'resident_id'
         );
     }
 

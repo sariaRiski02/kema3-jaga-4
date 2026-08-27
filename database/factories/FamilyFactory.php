@@ -18,8 +18,7 @@ class FamilyFactory extends Factory
     public function definition(): array
     {
         return [
-            'family_number' => $this->faker->unique()->numerify('FAM-#####'),
-            'head_of_family' => null, // You can set this to a valid resident ID if needed
+            'family_number' => $this->faker->unique()->numerify('FAM-########'),
         ];
     }
 }

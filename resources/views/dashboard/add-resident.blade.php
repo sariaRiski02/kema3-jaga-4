@@ -3,8 +3,21 @@
 @section('content')
 
 
-<div x-data="{ on: false, fileSelected: false }">
+<!-- Fullscreen loading overlay -->
+<div
+  x-show="loading"
+  x-cloak
+  class="{{ session('status') === 'loading' ? '' : 'hidden' }} fixed inset-0 z-[9999] flex items-center justify-center bg-black/60"
+  role="status"
+  aria-live="polite"
+>
+  <div class="flex flex-col items-center gap-3 rounded-xl bg-white px-8 py-6 shadow-2xl">
+    <div class="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-700"></div>
+    <span class="font-medium text-purple-800">Memproses...</span>
+  </div>
+</div>
 
+<div x-data="{ on: false, fileSelected: false, loading: false }">
   <div class="flex my-3">
     <div>
         <div class="flex items-center gap-3">
@@ -45,7 +58,7 @@
       <span x-text="on ? 'Tambah Data Warga dengan Banyak Sekaligus' : 'Tambah Data Warga'"></span>
     </h2>
 
-    <form action="{{ route('store-resident') }}" method="POST" class="space-y-6 sm:space-y-10" id="addResidentForm">
+    <form action="{{ route('store-resident') }}" method="POST" class="space-y-6 sm:space-y-10" id="addResidentForm" @submit="loading = true">
       <!-- Warga -->
       <div class="border border-purple-300 rounded-lg p-4 mb-4">
         <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
@@ -162,7 +175,7 @@
   </div>
 
   <!-- Import Excel Section -->
-  <form action="{{ route('import-data') }}" method="POST" enctype="multipart/form-data" id="importForm">
+  <form action="{{ route('import-data') }}" method="POST" enctype="multipart/form-data" id="importForm" @submit="loading = true">
     @csrf
   <div 
   :class="on ? '' : 'hidden'"
@@ -220,18 +233,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Progress Bar -->
-      <div id="uploadProgress" class="hidden mt-4">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-sm font-medium text-purple-700">Memproses data...</span>
-          <span class="text-sm text-purple-600" id="progressText">0%</span>
-        </div>
-        <div class="w-full bg-purple-200 rounded-full h-2">
-          <div class="progress-bar bg-purple-600 h-2 rounded-full" id="progressBar" style="width: 0%"></div>
-        </div>
-      </div>
-
       <!-- Import Button -->
       <div class="mt-4">
         <button type="submit" id="importBtn" x-show="fileSelected" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-semibold flex items-center gap-2">
@@ -242,7 +243,7 @@
     </div>
 
     <!-- Preview Data -->
-    <div id="previewSection" class="hidden">
+    <div id="previewSection" class="">
       <h3 class="text-lg font-semibold text-purple-700 mb-4 flex items-center gap-2">
         <span>👁️</span>
         <span>Preview Data Excel</span>
@@ -260,4 +261,18 @@
   </form>
 
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!window.Echo) {
+      console.error('Laravel Echo belum tersedia.');
+      return;
+    }
+
+    window.Echo.channel('import')
+      .listen('.ImportCompleted', (event) => {
+        console.log('Import selesai!', event);
+      });
+  });
+</script>
 @endsection

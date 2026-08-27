@@ -21,6 +21,7 @@ class GuestController extends Controller
     {
         
         $resident = $this->residentStatService;
+        
         $families = Family::all();
         return view('guest.main', compact('resident', 'families'));
     }

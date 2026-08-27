@@ -49,9 +49,10 @@ class ResidentStatService
             '60+' => 0,  // lansia
         ];
 
-        foreach ($residents as $resident) {
-            $age = $resident->age; // Assuming you have an age attribute in your Resident model
 
+
+        foreach ($residents as $resident) {
+            $age = $resident->age->years; // Assuming you have an age attribute in your Resident model
             if ($age >= 0 && $age <= 12) {
                 $ageGroups['0-12']++;
             } elseif ($age >= 13 && $age <= 17) {
@@ -62,35 +63,40 @@ class ResidentStatService
                 $ageGroups['60+']++;
             }
         }
-
         return $ageGroups;
     }
 
 
     public function education_group(){
+        
         $residents = $this->Objresident->all();
-        $education = [
-            'Tidak Sekolah',
-            'Belum Sekolah',
-            'SD/sederajat',
-            'SMP/sederajat',
-            'SMA/sederajat',
-            'SD',
-            'SMP',
-            'SMA',
-            'Diploma',
-            'Sarjana',
-            'Magister',
-            'Doktor',
+        $educationsOrder = [
+            'tidak sekolah',
+            'belum sekolah',
+            'sd/sederajat',
+            'smp/sederajat',
+            'sma/sederajat',
+            'sd',
+            'smp',
+            'sma',
+            'diploma',
+            'sarjana',
+            'magister',
+            'doktor',
         ];
 
-        $counts = $residents->countBy('education');
-
-        return collect($education)->mapWithKeys(
-            fn ($level) => [$level => $counts->get($level, 0)]
-        )->filter(function($edu){
-            return $edu > 0;
+        $education = $residents->countBy('education')->filter(function ($count) {
+            return $count > 0;
         });
+
+        $sorted = collect($educationsOrder)->mapWithKeys(function ($key) use ($education) {
+            return [ucwords($key) => $education->get($key, 0)];
+        });
+
+        return $sorted->filter(function ($count) {
+            return $count > 0;
+        });
+    
     }
 
     public function occupation_group(){

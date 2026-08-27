@@ -110,7 +110,7 @@
             </span></td>
             <td class="px-4 py-3.5">
               <div class="flex justify-center gap-1">
-                <button class="p-2 rounded-lg text-gray-400 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-150" title="Lihat Detail">👁️</button>
+                <a href="{{ route('show-resident', $resident->nik) }}" class="p-2 rounded-lg text-gray-400 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-150" title="Lihat Detail">👁️</a>
                 <button class="p-2 rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors duration-150" title="Edit Data">✏️</button>
                 <button class="p-2 rounded-lg text-gray-400 hover:text-red-700 hover:bg-red-50 transition-colors duration-150" title="Hapus Data">🗑️</button>
               </div>
