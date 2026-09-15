@@ -8,17 +8,27 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [GuestController::class, 'index']);
 
 // Route::middleware([LoginMiddleware::class])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
+    Route::get('/daftar-warga', [DashboardController::class, 'listResident'])->name('dashboard.list-resident');
+    Route::get('/warga/{resident:nik}/', [DashboardController::class, 'showResident'])->name('dashboard.show-resident');
+    Route::get('/export-warga/{resident:nik}', [DashboardController::class, 'exportResident'])->name('dashboard.export-resident');
+    Route::get('/tambah-warga', [DashboardController::class, 'addResident'])->name('dashboard.add-resident');
+    Route::post('/tambah-warga', [DashboardController::class, 'storeResident'])->name('dashboard.store-resident');
+    Route::get('/update-warga/{resident:nik}', [DashboardController::class, 'editResident'])->name('dashboard.edit-resident');
+    Route::put('/update-warga/{resident:nik}', [DashboardController::class, 'updateResident'])->name('dashboard.update-resident');
+    
+    Route::delete('/delete-warga/{resident:nik}', [DashboardController::class, 'deleteResident'])->name('dashboard.delete-resident');
+    
+    Route::delete('/dashboard/residents/bulk-delete', [DashboardController::class, 'bulkDestroy'])
+        ->name('dashboard.bulk-delete-resident');
 
-    Route::get('/tambah-data', [DashboardController::class, 'tambahData'])->name('add-resident');
-    Route::post('/tambah-data', [DashboardController::class, 'storeData'])->name('store-resident');
-    Route::delete('/tambah-data/import-errors', [DashboardController::class, 'clearImportErrors'])->name('clear-import-errors');
-    Route::get('/amibl-template', [DashboardController::class, 'downloadTemplate'])->name('download-template');
-    Route::post('/import-data', [DashboardController::class, 'importData'])->name('import-data');
 
-    Route::get('/update-data', [DashboardController::class, 'updateData'])->name('update-resident');
-    Route::get('/data-warga', [DashboardController::class, 'listResident'])->name('list-resident');
-    Route::get('/data-warga/{resident:nik}/', [DashboardController::class, 'show'])->name('show-resident');
+    Route::get('/import-resident', [DashboardController::class, 'importResident'])->name('dashboard.import-resident');
+    Route::post('/import-resident', [DashboardController::class, 'storeImportResident'])->name('dashboard.store-import-resident');
+    Route::get('/download-template', [DashboardController::class, 'downloadTemplate'])->name('dashboard.download-template');
+    
+    Route::get('/tambah-keluarga', [DashboardController::class, 'addFamily'])->name('dashboard.add-family');
+    Route::get('/daftar-keluarga', [DashboardController::class, 'listFamily'])->name('dashboard.list-family');
     
     Route::get('/logout', [GuestController::class, 'logout'])->name('logout');
 // });

@@ -2,30 +2,24 @@
 
 namespace App\Imports;
 
-use App\Events\ImportCompleted;
 use App\Models\Family;
 use App\Models\FamilyRelationship;
 use App\Models\Resident;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
 
-class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, ShouldQueue, WithChunkReading, SkipsOnFailure,WithEvents
+class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, ShouldQueue, WithChunkReading, SkipsOnFailure
 {
     use SkipsFailures;
-
-    public function __construct(public ?int $userId = null) {}
 
     private const RELATIONSHIPS = [
         'kepala keluarga',
@@ -189,10 +183,6 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
 
     public function onRow(Row $row)
     {
-        // 1. Tambahkan counter di cache setiap kali baris diproses
-        $cacheKey = 'import_rows_' . ($this->userId ?? 'guest');
-        Cache::increment($cacheKey);
-
         $row = $row->toArray();
         $data = $this->prepareForValidation($row);
 
@@ -234,25 +224,4 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
         return 200;
     }
 
-    public function registerEvents(): array
-    {
-        return [
-            AfterImport::class => function(AfterImport $event) {
-                $userId = $this->userId ?? 1;
-                $cacheKey = 'import_rows_' . $userId;
-                
-                // 2. Ambil total baris dari cache, lalu hapus cache-nya agar bersih
-                $totalRows = Cache::get($cacheKey, 0);
-                Cache::forget($cacheKey);
-
-                // 3. Broadcast event dengan data yang valid
-                broadcast(new ImportCompleted(
-                    userId: $userId,
-                    totalRows: $totalRows,
-                    failedRows: count($this->failures()),
-                    errors: $this->failures()->toArray()
-                ));
-            }
-        ];
-    }
 }

@@ -56,6 +56,24 @@ class Resident extends Model
         );
     }
 
+    protected function ageAtDeath(): Attribute
+    {
+        return Attribute::make(
+            get: function (){
+                if(!$this->date_of_birth || !$this->date_of_death){
+                    return null;
+                }
+                $diff = $this->date_of_birth->diff($this->date_of_death);
+
+                return (object) [
+                    'years' => $diff->y,
+                    'months' => $diff->m,
+                    'days' => $diff->d,
+                ];
+            }
+        );
+    }
+
     public function familyRelationship(){
         return $this->hasOne(FamilyRelationship::class);
     }

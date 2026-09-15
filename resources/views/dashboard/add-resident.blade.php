@@ -3,62 +3,16 @@
 @section('content')
 
 
-<!-- Fullscreen loading overlay -->
-<div
-  x-show="loading"
-  x-cloak
-  class="{{ session('status') === 'loading' ? '' : 'hidden' }} fixed inset-0 z-[9999] flex items-center justify-center bg-black/60"
-  role="status"
-  aria-live="polite"
->
-  <div class="flex flex-col items-center gap-3 rounded-xl bg-white px-8 py-6 shadow-2xl">
-    <div class="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-700"></div>
-    <span class="font-medium text-purple-800">Memproses...</span>
-  </div>
-</div>
-
-<div x-data="{ on: false, fileSelected: false, loading: false }">
-  <div class="flex my-3">
-    <div>
-        <div class="flex items-center gap-3">
-            <button 
-                @click="on = !on" 
-                :class="on ? 'bg-blue-600' : 'bg-red-700'"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
-            >
-                <span 
-                    :class="on ? 'translate-x-6' : 'translate-x-1'"
-                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300"
-                ></span>
-            </button>
-
-            <span 
-                x-text="on ? 'Mode banyak' : 'Mode satuan'"
-                :class="on ? 'text-blue-600' : 'text-red-700'"
-                class="text-sm font-medium"
-            ></span>
-        </div>
-
-        <p class="mt-1 text-xs text-gray-500" x-show="!on">
-            Form Isi satu persatu
-        </p>
-        <p class="mt-1 text-xs text-gray-500" x-show="on">
-            Form Mengisi banyak sekaligus
-        </p>
-    </div>
-
-  </div>
-
-  <!-- Form Input Data -->
+<!-- Form Input Data -->
   <div
   :class="on ? 'hidden' : ''"
   class="bg-white p-4 sm:p-8 rounded-xl shadow-xl mb-8 sm:mb-12 border-2 border-purple-200">
     <h2 class="text-xl sm:text-2xl font-bold text-purple-800 mb-4 sm:mb-6 flex items-center gap-2">
       <span>📝</span>
-      <span x-text="on ? 'Tambah Data Warga dengan Banyak Sekaligus' : 'Tambah Data Warga'"></span>
+      
     </h2>
 
-    <form action="{{ route('store-resident') }}" method="POST" class="space-y-6 sm:space-y-10" id="addResidentForm" @submit="loading = true">
+    <form action="{{ route('dashboard.store-resident') }}" method="POST" class="space-y-6 sm:space-y-10" id="addResidentForm" @submit="loading = true">
       <!-- Warga -->
       <div class="border border-purple-300 rounded-lg p-4 mb-4">
         <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4 flex items-center gap-2">
@@ -174,105 +128,4 @@
     </form>
   </div>
 
-  <!-- Import Excel Section -->
-  <form action="{{ route('import-data') }}" method="POST" enctype="multipart/form-data" id="importForm" @submit="loading = true">
-    @csrf
-  <div 
-  :class="on ? '' : 'hidden'"
-  class="bg-white p-4 sm:p-8 rounded-xl shadow-xl mb-8 sm:mb-12">
-
-    <!-- Header: judul + deskripsi di kiri, tombol template di kanan -->
-    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-purple-800 flex items-center gap-2">
-          <span>📊</span>
-          <span>Import Data dari Excel</span>
-        </h2>
-        <p class="text-sm text-gray-500 mt-2 max-w-xl">
-          Unggah data warga dalam jumlah banyak sekaligus. Pastikan susunan kolom pada file Excel mengikuti template di samping.
-        </p>
-      </div>
-
-      <a href="{{ route('download-template') }}" id="downloadTemplateBtn" class="shrink-0 bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-all duration-200 font-semibold flex items-center gap-2">
-        <span>📋</span>
-        <span>Download Template Excel</span>
-      </a>
-    </div>
-
-    <!-- File Upload Area -->
-    <div class="mb-6">
-      <div id="fileDropZone" class="file-drop-zone border-2 border-dashed border-purple-400 rounded-lg p-8 text-center bg-purple-50 hover:bg-purple-100 transition-all duration-200">
-        <div class="space-y-4">
-          <div class="text-4xl">📁</div>
-          <div>
-            <p class="text-lg font-medium text-purple-800 mb-2">Drag & Drop file Excel di sini</p>
-            <p class="text-gray-600 mb-4">atau</p>
-            <input type="file" id="excelFileInput" x-ref="excelFileInput" accept=".xlsx,.xls,.csv" class="hidden" name="file" required @change="fileSelected = $event.target.files.length > 0">
-            <button type="button" id="selectFileBtn" @click="$refs.excelFileInput.click()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-all duration-200 font-semibold">
-              📂 Pilih File Excel
-            </button>
-          </div>
-          <p class="text-sm text-gray-500">
-            Format yang didukung: .xlsx, .xls, .csv (maksimal 10MB)
-          </p>
-        </div>
-      </div>
-
-      <!-- File Info -->
-      <div id="fileInfo" class="hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="text-2xl">📄</div>
-            <div>
-              <p class="font-medium text-blue-800" id="fileName"></p>
-              <p class="text-sm text-blue-600" id="fileSize"></p>
-            </div>
-          </div>
-          <button id="removeFileBtn" class="text-red-500 hover:text-red-700 font-medium">
-            ✕ Hapus
-          </button>
-        </div>
-      </div>
-      <!-- Import Button -->
-      <div class="mt-4">
-        <button type="submit" id="importBtn" x-show="fileSelected" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 font-semibold flex items-center gap-2">
-          <span>📊</span>
-          <span>Import Data</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Preview Data -->
-    <div id="previewSection" class="">
-      <h3 class="text-lg font-semibold text-purple-700 mb-4 flex items-center gap-2">
-        <span>👁️</span>
-        <span>Preview Data Excel</span>
-      </h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full border border-gray-200">
-          <thead class="bg-gray-100">
-            <tr id="previewHeader"></tr>
-          </thead>
-          <tbody id="previewBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  </form>
-
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    if (!window.Echo) {
-      console.error('Laravel Echo belum tersedia.');
-      return;
-    }
-
-    window.Echo.channel('import')
-      .listen('.ImportCompleted', (event) => {
-        console.log('Import selesai!', event);
-      });
-  });
-</script>
 @endsection
