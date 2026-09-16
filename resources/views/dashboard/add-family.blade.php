@@ -1,7 +1,7 @@
 @extends('dashboard.main')
 
-
-
 @section('content')
-    Belum Ada Content
+
+<livewire:families.add-family />
+
 @endsection

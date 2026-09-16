@@ -15,40 +15,46 @@
       <a href="{{ route('dashboard.add-resident') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ➕ Tambah Data
       </a>
-      <a href="" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
+      <a href="{{ route('dashboard.export-all-resident') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ⬇️ Download Excel
       </a>
     </div>
   </div>
 
   <!-- ===== Search ===== -->
-  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
-    <!-- Search -->
-    <div class="relative flex-1">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Cari NIK, Nama, atau Tempat Lahir..."
-        class="w-full px-4 py-3 pl-12 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
-      />
-      <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</div>
+  <form id="residentSearchForm" action="{{ route('dashboard.list-resident') }}" method="get">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+        <!-- Search -->
+        <div class="relative flex-1">
+          <input
+            type="text"
+            id="searchInput"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Cari NIK, Nama, Umur, atau Jenis Kelamin"
+            class="w-full px-4 py-3 pl-12 pr-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
+          />
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</div>
+          <button
+          type="button"
+          id="clearSearch"
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          title="Hapus pencarian"
+        >✕</button>
+      </div>
+      <!-- Search Button -->
       <button
-        id="clearSearch"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-        title="Hapus pencarian"
-      >✕</button>
+        id="searchBtn"
+        type="submit"
+        class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-purple-700 text-white font-semibold hover:bg-purple-800 transition-all duration-200 shadow-sm"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        Cari
+      </button>
     </div>
-    <!-- Search Button -->
-    <button
-      id="searchBtn"
-      class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-purple-700 text-white font-semibold hover:bg-purple-800 transition-all duration-200 shadow-sm"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-      </svg>
-      Cari
-    </button>
-  </div>
+    </form>
 
 
 
@@ -65,7 +71,7 @@
       <thead>
         <tr class="bg-purple-50 text-purple-800 text-xs uppercase tracking-wide">
           <th class="px-4 py-3.5 text-center font-semibold w-10">
-            <input type="checkbox" id="selectAll" class="w-4 h-4 rounded border-gray-300 accent-purple-700">
+            <input type="checkbox" id="selectAll" class="w-4 h-4 rounded border-gray-300 accent-purple-700" @disabled($residents->isEmpty())>
           </th>
           <th class="px-4 py-3.5 text-left font-semibold">No</th>
 
@@ -79,7 +85,7 @@
       </thead>
       <tbody id="tableBody" class="divide-y divide-gray-100">
         {{-- Contoh baris statis, ganti dengan @foreach($warga as $w) sesuai data asli --}}
-        @foreach ($residents as $resident)
+        @forelse ($residents as $resident)
           <tr class="hover:bg-purple-50/40 transition-colors duration-150">
             <td class="px-4 py-3.5 text-center">
               <input type="checkbox" class="row-checkbox w-4 h-4 rounded border-gray-300 accent-purple-700" value="{{ $resident->nik }}">
@@ -121,14 +127,35 @@
               </div>
             </td>
           </tr>    
-        @endforeach
+        @empty
+          <tr>
+            <td colspan="8" class="px-4 py-12 text-center">
+              <div class="text-4xl mb-3">📋</div>
+              @if(request('search'))
+                <h3 class="text-lg font-semibold text-gray-800">Data tidak ditemukan</h3>
+                <p class="mt-1 text-gray-500">Tidak ada warga yang cocok dengan pencarian "{{ request('search') }}".</p>
+                <button type="button" id="emptyClearSearch" class="mt-4 rounded-lg bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800">
+                  Tampilkan Semua Data
+                </button>
+              @else
+                <h3 class="text-lg font-semibold text-gray-800">Belum ada data warga</h3>
+                <p class="mt-1 text-gray-500">Tambahkan data warga terlebih dahulu untuk menampilkannya di daftar.</p>
+                <a href="{{ route('dashboard.add-resident') }}" class="mt-4 inline-flex rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700">
+                  Tambah Data Warga
+                </a>
+              @endif
+            </td>
+          </tr>
+        @endforelse
         
       </tbody>
     </table>
   </div>
-  <div class="pt-5">
-    {{ $residents->links() }}
-  </div>
+  @if($residents->hasPages())
+    <div class="pt-5">
+      {{ $residents->links() }}
+    </div>
+  @endif
   
 
   <!-- No Results -->
@@ -169,6 +196,10 @@
     const selectAll = document.getElementById('selectAll');
     const tableBody = document.getElementById('tableBody');
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const searchForm = document.getElementById('residentSearchForm');
+    const emptyClearSearch = document.getElementById('emptyClearSearch');
     const rowCheckboxes = () => tableBody.querySelectorAll('.row-checkbox');
     const bar = document.getElementById('bulkActionBar');
     const countEl = document.getElementById('selectedCount');
@@ -194,6 +225,16 @@
 
     tableBody.addEventListener('change', (event) => {
       if (event.target.classList.contains('row-checkbox')) updateBar();
+    });
+
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      searchForm.submit();
+    });
+
+    emptyClearSearch?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchForm.submit();
     });
 
     bulkDeleteBtn.addEventListener('click', () => {

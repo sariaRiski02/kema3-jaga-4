@@ -11,7 +11,7 @@
       <span>Daftar Keluarga</span>
     </h2>
     <div class="flex flex-wrap items-center gap-3">
-      <a href="" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
+      <a href="{{ route('dashboard.add-family') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ➕ Tambah KK
       </a>
       <a href="" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">

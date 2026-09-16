@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exports\ResidentExport;
 use App\Http\Requests\ResidentRequest;
 use App\Http\Requests\ResidentUpdateRequest;
 use App\Imports\ResidentImport;
@@ -10,9 +11,10 @@ use App\Models\Family;
 use App\Models\Resident;
 use App\Services\ResidentService;
 use App\Services\ResidentStatService;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class DashboardController extends Controller
@@ -39,9 +41,38 @@ class DashboardController extends Controller
         );
     }
 
+    public function exportAllResident()
+    {
+        return Excel::download(new ResidentExport, 'data_warga.xlsx');
+        
+    }
+
     // List Resident
-    public function listResident(){
-        $residents = $this->residentStat->Objresident->latest()->paginate(15);
+    public function listResident(Request $request){
+        $search = trim((string) $request->input('search', ''));
+        $query = $this->residentStat->Objresident->newQuery();
+
+        if ($search !== '') {
+            $query->where(function ($residentQuery) use ($search) {
+                $residentQuery
+                    ->where('nik', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('gender', 'like', "%{$search}%");
+
+                if (ctype_digit($search)) {
+                    $age = (int) $search;
+                    $today = Carbon::today();
+
+                    $residentQuery->orWhere(function ($ageQuery) use ($age, $today) {
+                        $ageQuery
+                            ->whereDate('date_of_birth', '<=', $today->copy()->subYears($age))
+                            ->whereDate('date_of_birth', '>', $today->copy()->subYears($age + 1));
+                    });
+                }
+            });
+        }
+
+        $residents = $query->latest()->paginate(15)->withQueryString();
 
         return view('dashboard.list-resident', compact('residents'));
     }

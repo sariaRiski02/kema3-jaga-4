@@ -6,6 +6,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <title>Dashboard Desa Kema 3 - Jaga 4</title>
+  @livewireStyles
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -116,5 +117,6 @@
     });
   </script>
 
+  @livewireScripts
 </body>
 </html>
