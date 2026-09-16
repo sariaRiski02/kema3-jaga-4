@@ -41,7 +41,6 @@ new class extends Component
 
     public function removeHead(){
         $this->head_id = null;
-
     }
     
     #[Computed]

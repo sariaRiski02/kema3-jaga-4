@@ -16,6 +16,12 @@ class Family extends Model
         'family_number',
     ];
 
+    public function headFamily()
+    {
+        return $this->hasOne(FamilyRelationship::class)
+            ->where('family_relationship', 'kepala keluarga');
+    }
+
     public function familyRelationships(){
         return $this->hasMany(FamilyRelationship::class);
     }

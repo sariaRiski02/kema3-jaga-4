@@ -15,6 +15,14 @@ class FamilyRelationshipSeeder extends Seeder
      */
     public function run(): void
     {
-        FamilyRelationship::factory(10)->create();
+        Family::query()->each(function (Family $family) {
+            $resident = Resident::factory()->create();
+
+            FamilyRelationship::create([
+                'family_id' => $family->id,
+                'resident_id' => $resident->id,
+                'family_relationship' => 'kepala keluarga',
+            ]);
+        });
     }
 }
