@@ -24,8 +24,7 @@ return new class extends Migration
                     'mertua',
                     'menantu',
                     'cucu',
-                    'saudara',
-                    'lainnya lain',
+                        'lainnya',
             ];
         Schema::create('family_relationships', function (Blueprint $table) use($relationships) {
             $table->id();

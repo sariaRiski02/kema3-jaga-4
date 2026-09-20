@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      target: app
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - laravel
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - laravel
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge

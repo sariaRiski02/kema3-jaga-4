@@ -29,6 +29,7 @@ class ResidentService
             'marital_status' => $request['marital_status'] ?? null,
             'address' => $request['address'] ?? null,
             'education' => $request['education'] ?? null,
+            'is_currently_studying' => (bool) ($request['is_currently_studying'] ?? false),
             'occupation' => $request['occupation'] ?? null
         ]);
     }
@@ -50,6 +51,7 @@ class ResidentService
                 'marital_status' => $request['marital_status'] ?? $resident->marital_status,
                 'address' => $request['address'] ?? $resident->address,
                 'education' => $request['education'] ?? $resident->education,
+                'is_currently_studying' => (bool) ($request['is_currently_studying'] ?? false),
                 'occupation' => $request['occupation'] ?? $resident->occupation
             ]);
         }

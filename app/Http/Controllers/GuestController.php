@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Family;
-use App\Models\Resident;
 use App\Services\ResidentStatService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
 {
@@ -56,7 +54,7 @@ class GuestController extends Controller
 
         session(['is_admin' => true]);
         if ($request->has('remember')) {
-            return redirect()->route('dashboard')->withCookie(cookie('remember', true, 43200));
+            return redirect()->route('dashboard')->withCookie(cookie('remember_admin', true, 43200));
         }
 
         return redirect()->route('dashboard');

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Family;
 use App\Models\Resident;
+use Illuminate\Support\Collection;
 
 class ResidentStatService
 {
@@ -20,9 +22,95 @@ class ResidentStatService
         $gender = strtolower($gender);
         $residents = $this->Objresident->all();
          if(!$gender) {
-            return $resident->groupBy('gender');
+            return $residents->groupBy('gender');
          }
          return $residents->where('gender', $gender);
+    }
+
+    public function dashboardSummary(): array
+    {
+        $residents = Resident::with('familyRelationship')->get();
+        $activeResidents = $residents->whereNull('deleted_at');
+
+        $ageGroups = collect([
+            'Anak-anak (0-12 tahun)' => 0,
+            'Remaja (13-17 tahun)' => 0,
+            'Dewasa (18-59 tahun)' => 0,
+            'Lansia (60+ tahun)' => 0,
+            'Belum diketahui' => 0,
+        ]);
+
+        foreach ($activeResidents as $resident) {
+            $age = $resident->age?->years;
+
+            if ($age === null) {
+                $ageGroups->put('Belum diketahui', $ageGroups->get('Belum diketahui') + 1);
+            } elseif ($age <= 12) {
+                $ageGroups->put('Anak-anak (0-12 tahun)', $ageGroups->get('Anak-anak (0-12 tahun)') + 1);
+            } elseif ($age <= 17) {
+                $ageGroups->put('Remaja (13-17 tahun)', $ageGroups->get('Remaja (13-17 tahun)') + 1);
+            } elseif ($age <= 59) {
+                $ageGroups->put('Dewasa (18-59 tahun)', $ageGroups->get('Dewasa (18-59 tahun)') + 1);
+            } else {
+                $ageGroups->put('Lansia (60+ tahun)', $ageGroups->get('Lansia (60+ tahun)') + 1);
+            }
+        }
+
+        return [
+            'total_active' => $activeResidents->count(),
+            'total_recorded' => Resident::withTrashed()->count(),
+            'total_families' => Family::count(),
+            'male' => $activeResidents->where('gender', 'laki-laki')->count(),
+            'female' => $activeResidents->where('gender', 'perempuan')->count(),
+            'alive' => $activeResidents->whereNull('date_of_death')->count(),
+            'deceased' => $activeResidents->whereNotNull('date_of_death')->count(),
+            'without_family' => $activeResidents->filter(fn ($resident) => !$resident->familyRelationship)->count(),
+            'age_groups' => $ageGroups->filter(fn ($count, $label) => $count > 0 || $label === 'Belum diketahui'),
+            'religions' => $this->groupValues($activeResidents, 'religion'),
+            'education' => $this->educationSummary($activeResidents),
+            'marital_status' => $this->groupValues($activeResidents, 'marital_status'),
+            'occupations' => $this->groupValues($activeResidents, 'occupation'),
+        ];
+    }
+
+    private function educationSummary(Collection $residents): array
+    {
+        return [
+            'sedang_sekolah' => $this->educationCounts(
+                $residents->where('is_currently_studying', true)
+            ),
+            'sudah_lulus' => $this->educationCounts(
+                $residents->where('is_currently_studying', false)
+            ),
+        ];
+    }
+
+    private function educationCounts(Collection $residents): Collection
+    {
+        return $residents
+            ->map(fn ($resident) => filled($resident->education)
+                ? ucwords($resident->education)
+                : 'Belum diisi')
+            ->countBy()
+            ->sortDesc();
+    }
+
+    private function groupValues(Collection $residents, string $field): Collection
+    {
+        return $residents
+            ->map(function ($resident) use ($field) {
+                if (!filled($resident->{$field})) {
+                    return 'Belum diisi';
+                }
+
+                if ($field === 'education') {
+                    return $this->formatEducationLabel($resident->{$field});
+                }
+
+                return ucwords($resident->{$field});
+            })
+            ->countBy()
+            ->sortDesc();
     }
 
     public function getGenderPercentage($gender = ''){

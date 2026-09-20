@@ -1,14 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GuestController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\GuestController;
+use App\Http\Middleware\LoginMiddleware;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [GuestController::class, 'index']);
 
-// Route::middleware([LoginMiddleware::class])->group(function () {
+Route::middleware(LoginMiddleware::class)->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard');
+    Route::get('/dashboard/export', [DashboardController::class, 'exportDashboard'])->name('dashboard.export');
     
     // ResidentController
     Route::get('/daftar-warga', [DashboardController::class, 'listResident'])->name('dashboard.list-resident');
@@ -32,10 +35,12 @@ Route::get('/', [GuestController::class, 'index']);
     
     Route::get('/tambah-keluarga', [DashboardController::class, 'addFamily'])->name('dashboard.add-family');
     Route::get('/daftar-keluarga', [DashboardController::class, 'listFamily'])->name('dashboard.list-family');
-    
-    Route::get('/logout', [GuestController::class, 'logout'])->name('logout');
+    Route::get('/daftar-keluarga/export', [DashboardController::class, 'exportAllFamily'])->name('dashboard.export-all-family');
+    Route::get('/keluarga/{family:family_number}', [FamilyController::class, 'show'])->name('dashboard.show-family');
+    Route::get('/keluarga/{family:family_number}/export', [FamilyController::class, 'export'])->name('dashboard.export-family');
+    Route::get('/keluarga/{family:family_number}/edit', [FamilyController::class, 'edit'])->name('dashboard.edit-family');
+});
 
-    
-// });
-Route::get('/login', [GuestController::class, 'loginPage']);
-Route::post('/login', [GuestController::class, 'login'])->name('login');
+Route::get('/login', [GuestController::class, 'loginPage'])->name('login');
+Route::post('/login', [GuestController::class, 'login']);
+Route::get('/logout', [GuestController::class, 'logout'])->name('logout');

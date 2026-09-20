@@ -68,7 +68,7 @@ new class extends Component
       <a href="{{ route('dashboard.add-family') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ➕ Tambah KK
       </a>
-      <a href="" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
+      <a href="{{ route('dashboard.export-all-family') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow transition-all duration-200 w-fit">
         ⬇️ Download Excel
       </a>
     </div>
@@ -148,12 +148,12 @@ new class extends Component
                 </td>
                 <td class="px-4 py-3.5">
                     <div class="flex justify-center gap-1">
-                    <button class="p-2 rounded-lg text-gray-400 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-150" title="Lihat Detail">👁️</button>
-                    <button class="p-2 rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors duration-150" title="Edit Data">✏️</button>
+                    <a href="{{ route('dashboard.show-family', $family->family_number) }}" class="p-2 rounded-lg text-gray-400 hover:text-purple-700 hover:bg-purple-50 transition-colors duration-150" title="Lihat Detail">👁️</a>
+                    <a href="{{ route('dashboard.edit-family', $family->family_number) }}" class="p-2 rounded-lg text-gray-400 hover:text-green-700 hover:bg-green-50 transition-colors duration-150" title="Edit Data">✏️</a>
                     <button
                       type="button"
                       x-on:click.prevent="Swal.fire({
-                        title: 'Hapus keluarga?',
+                        title: 'Hapus keluarga Dengan No. KK {{$family->family_number}}?',
                         text: 'Data relasi keluarga akan ikut dihapus.',
                         icon: 'warning',
                         showCancelButton: true,

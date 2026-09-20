@@ -39,22 +39,9 @@
             Dashboard Desa Kema 3 – Jaga 4
           </h1>
         </div>
-
-        <!-- Desktop Actions -->
-        <div class="hidden lg:flex gap-2">
-          <a href="/visualisasi" class="bg-purple-50 text-purple-700 hover:bg-purple-100 font-medium text-sm px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            Visualisasi
-          </a>
-          <a href="/logout" class="bg-red-50 text-red-700 hover:bg-red-100 font-medium text-sm px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-            </svg>
-            Keluar
-          </a>
-        </div>
+        <a href="{{ route('logout') }}" class="hidden lg:inline-flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100">
+          Keluar
+        </a>
       </div>
     </header>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -32,13 +33,39 @@ class ResidentUpdateRequest extends FormRequest
             'occupation' => ['nullable', 'string', 'max:255'],
             'marital_status' => ['nullable', 'in:belum kawin,kawin,cerai hidup,cerai mati'],
             'family_number' => ['nullable', 'digits:16'],
-            'family_relationship' => ['nullable', 'in:kepala keluarga,istri,anak,orangtua,mertua,keponakan,cucu,saudara,lainnya'],
+            'family_relationship' => ['nullable', 'in:kepala keluarga,suami,istri,anak,orang tua,keponakan,saudara,sepupu,mertua,menantu,cucu,lainnya'],
             'date_of_death' => ['nullable', 'date', 'after_or_equal:date_of_birth'],
             'address' => ['nullable', 'string', 'max:255'],
             'education' => [
                 'nullable',
                 'in:tidak sekolah,sd,smp,sma,sd/sederajat,sma/sederajat,diploma,sarjana,magister,doktor,lainnya',
             ],
+            'is_currently_studying' => ['boolean'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'date_of_birth' => $this->normalizeDate($this->input('date_of_birth')),
+            'date_of_death' => $this->normalizeDate($this->input('date_of_death')),
+        ]);
+    }
+
+    private function normalizeDate(?string $value): ?string
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        foreach (['d-m-Y', 'Y-m-d'] as $format) {
+            try {
+                return Carbon::createFromFormat($format, $value)->format('Y-m-d');
+            } catch (\Throwable) {
+                continue;
+            }
+        }
+
+        return $value;
     }
 }

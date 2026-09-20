@@ -136,29 +136,40 @@
                         <p class="text-xs text-gray-500">Informasi singkat keluarga</p>
                     </div>
                 </div>
+                @php
+                    $family = $resident->family;
+                    $familyHead = $family?->headFamily?->resident;
+                    $familyMembersCount = $family?->residents()->count() ?? 0;
+                @endphp
                 <dl class="divide-y divide-gray-100">
                     <div class="grid grid-cols-2 gap-4 py-3 text-sm">
                         <dt class="text-gray-500">Nomor kartu keluarga</dt>
                         <dd class="text-right font-semibold text-gray-900">
-                            {{ $resident->family->family_number }}
+                            {{ $family?->family_number ?? '-' }}
                         </dd>
                     </div>
                     <div class="grid grid-cols-2 gap-4 py-3 text-sm">
                         <dt class="text-gray-500">Status dalam keluarga</dt>
-                        <dd class="text-right font-semibold text-gray-900"> {{ $resident->familyRelationship->family_relationship }} </dd>
+                        <dd class="text-right font-semibold text-gray-900">
+                            {{ $resident->familyRelationship?->family_relationship ?? '-' }}
+                        </dd>
                     </div>
                     <div class="grid grid-cols-2 gap-4 py-3 text-sm">
-                        <dt class="text-gray-500">Jumlah bersaudara</dt>
-                        <dd class="text-right font-semibold text-gray-900">3 bersaudara (belum di implementasikan)</dd>
+                        <dt class="text-gray-500">Kepala keluarga</dt>
+                        <dd class="text-right font-semibold text-gray-900">
+                            {{ $familyHead?->name ?? 'Belum ada' }}
+                        </dd>
                     </div>
                     <div class="grid grid-cols-2 gap-4 py-3 text-sm">
-                        <dt class="text-gray-500">Anak ke</dt>
-                        <dd class="text-right font-semibold text-gray-900">Anak ke-2 (belum di implementasikan)</dd>
+                        <dt class="text-gray-500">Jumlah anggota</dt>
+                        <dd class="text-right font-semibold text-gray-900">
+                            {{ $familyMembersCount }} orang
+                        </dd>
                     </div>
                 </dl>
                 <div class="mt-4 rounded-xl bg-gray-50 p-4">
                     <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Alamat lengkap</p>
-                    <p class="mt-1 text-sm font-semibold leading-6 text-gray-800"> {{ $resident->address }} </p>
+                    <p class="mt-1 text-sm font-semibold leading-6 text-gray-800"> {{ $resident->address ?: 'Alamat belum dicatat' }} </p>
                 </div>
             </section>    
         @else

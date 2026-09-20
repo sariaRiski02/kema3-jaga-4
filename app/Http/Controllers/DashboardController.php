@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Exports\FamilyExport;
+use App\Exports\DashboardExport;
 use App\Exports\ResidentExport;
 use App\Http\Requests\ResidentRequest;
 use App\Http\Requests\ResidentUpdateRequest;
@@ -30,21 +32,23 @@ class DashboardController extends Controller
     // Home Dashboard
     public function home()
     {
-        $resident = $this->residentStat;
-        $families = Family::all();
-        return view(
-            'dashboard.dashboard',
-            compact(
-                'resident',
-                'families'
-            )
-        );
+        $stats = $this->residentStat->dashboardSummary();
+
+        return view('dashboard.dashboard', compact('stats'));
     }
 
     public function exportAllResident()
     {
         return Excel::download(new ResidentExport, 'data_warga.xlsx');
         
+    }
+
+    public function exportDashboard()
+    {
+        return Excel::download(
+            new DashboardExport($this->residentStat->dashboardSummary()),
+            'ringkasan-dashboard.xlsx'
+        );
     }
 
     // List Resident
@@ -145,15 +149,69 @@ class DashboardController extends Controller
         $request->validate([
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:50240']
         ]);
+
         $path = $request->file('file')->store('imports');
-        Excel::queueImport(new ResidentImport(), $path);
-        return redirect()->route('dashboard.add-resident')->with('status', 'loading');
+        $import = new ResidentImport();
+        Excel::import($import, $path);
+
+        $failures = collect($import->failures())
+            ->map(fn ($failure) => 'Baris ' . $failure->row() . ': ' . implode(', ', $failure->errors()))
+            ->take(10)
+            ->values()
+            ->all();
+
+        return redirect()->route('dashboard.import-resident')->with('import-summary', [
+            'imported' => $import->importedRows(),
+            'failed' => count($import->failures()),
+            'errors' => $failures,
+        ]);
     }
 
     
 
     public function downloadTemplate(){
-        return response()->download(public_path('template_warga.xlsx'));
+        $columns = [
+            'nik',
+            'nama',
+            'jenis_kelamin',
+            'tempat_lahir',
+            'tanggal_lahir',
+            'tanggal_kematian',
+            'alamat',
+            'status_dikeluarga',
+            'pekerjaan',
+            'agama',
+            'status_perkawinan',
+            'pendidikan',
+            'sedang_bersekolah',
+            'no_kk',
+        ];
+
+        return response()->streamDownload(function () use ($columns) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, $columns);
+            fputcsv($handle, [
+                '1234567890123456',
+                'Budi Santoso',
+                'Laki-laki',
+                'Bandung',
+                '1990-05-12',
+                '',
+                'Jl. Raya No. 1',
+                'kepala keluarga',
+                'PNS',
+                'Islam',
+                'Kawin',
+                'SMA/SMK',
+                'tidak',
+                '1234567890123456',
+            ]);
+
+            fclose($handle);
+        }, 'template_warga.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
 
 
@@ -168,7 +226,10 @@ class DashboardController extends Controller
         return view('dashboard.list-family', compact('families'));
     }
 
-
+    public function exportAllFamily()
+    {
+        return Excel::download(new FamilyExport, 'data_keluarga.xlsx');
+    }
 
 
 }

@@ -46,7 +46,7 @@
           </div>
           <div>
             <label for="jenis_kelamin" class="block text-sm font-medium text-purple-700 mb-1">Tanggal Lahir<span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
-            <input type="date" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" class="input px-4 py-3 w-full" required>
+            <input type="text" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="dd-mm-yyyy" class="input px-4 py-3 w-full" required inputmode="numeric" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
             @error('date_of_birth') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
@@ -85,7 +85,7 @@
               <span>Tanggal Kematian</span>
               <span class="text-xs text-gray-400 font-normal">(opsional)</span>
             </label>
-            <input type="date" id="tanggal_kematian" name="date_of_death" value="{{ old('date_of_death') }}" class="input px-4 py-3 w-full" placeholder="Tanggal Kematian">
+            <input type="text" id="tanggal_kematian" name="date_of_death" value="{{ old('date_of_death') }}" class="input px-4 py-3 w-full" placeholder="dd-mm-yyyy" inputmode="numeric" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
             <span class="text-xs text-gray-500 mt-1 block">Isi jika orang yang bersangkutan telah meninggal dunia.</span>
             @error('date_of_death') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
@@ -99,11 +99,12 @@
             <select id="pendidikan" name="education" class="input px-4 py-3 w-full">
               <option value="">Pilih Pendidikan</option>
               <option value="tidak sekolah" @selected(old('education') === 'tidak sekolah')>Tidak Sekolah</option>
-              <option value="sd" @selected(old('education') === 'sd')>SD</option>
-              <option value="smp" @selected(old('education') === 'smp')>SMP</option>
-              <option value="sma" @selected(old('education') === 'sma')>SMA</option>
-              <option value="sd/sederajat" @selected(old('education') === 'sd/sederajat')>SD/Sederajat</option>
-              <option value="sma/sederajat" @selected(old('education') === 'sma/sederajat')>SMA/Sederajat</option>
+              <option value="sd" @selected(old('education') === 'sd')>SD (sedang sekolah)</option>
+              <option value="smp" @selected(old('education') === 'smp')>SMP (sedang sekolah)</option>
+              <option value="sma" @selected(old('education') === 'sma')>SMA (sedang sekolah)</option>
+              <option value="sd/sederajat" @selected(old('education') === 'sd/sederajat')>SD/Sederajat (sudah lulus)</option>
+              <option value="smp/sederajat" @selected(old('education') === 'smp/sederajat')>SMP/Sederajat (sudah lulus)</option>
+              <option value="sma/sederajat" @selected(old('education') === 'sma/sederajat')>SMA/Sederajat (sudah lulus)</option>
               <option value="diploma" @selected(old('education') === 'diploma')>Diploma</option>
               <option value="sarjana" @selected(old('education') === 'sarjana')>Sarjana</option>
               <option value="magister" @selected(old('education') === 'magister')>Magister</option>
@@ -111,6 +112,10 @@
               <option value="lainnya" @selected(old('education') === 'lainnya')>Lainnya</option>
             </select>
             @error('education') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
+            <label class="mt-3 flex items-center gap-2 text-sm text-gray-600">
+              <input type="checkbox" name="is_currently_studying" value="1" class="rounded border-gray-300 text-purple-700 focus:ring-purple-500" @checked(old('is_currently_studying'))>
+              <span>Saat ini masih bersekolah/kuliah</span>
+            </label>
           </div>
         </div>
       </div>

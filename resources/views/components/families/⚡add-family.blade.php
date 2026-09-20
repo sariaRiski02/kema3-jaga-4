@@ -1,11 +1,14 @@
 <?php
 
+use App\Models\Family;
+use App\Models\FamilyRelationship;
 use App\Models\Resident;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 new class extends Component
 {
+    public ?Family $family = null;
     public $family_number = "";
 
     // Kepala Keluarga
@@ -16,6 +19,29 @@ new class extends Component
     public $memberSearch = "";
     public $members = [];
 
+    public function mount(?Family $family = null)
+    {
+        $this->family = $family;
+
+        if ($this->family) {
+            $this->family_number = $this->family->family_number;
+            $this->head_id = $this->family->headFamily?->resident_id;
+
+            $this->members = $this->family->familyRelationships()
+                ->with('resident')
+                ->where('resident_id', '!=', $this->head_id)
+                ->get()
+                ->map(function ($relationship) {
+                    return [
+                        'resident_id' => $relationship->resident_id,
+                        'name' => $relationship->resident?->name,
+                        'nik' => $relationship->resident?->nik,
+                        'relation' => $relationship->family_relationship,
+                    ];
+                })
+                ->toArray();
+        }
+    }
 
     #[Computed]
     public function headResults(){
@@ -67,6 +93,10 @@ new class extends Component
     {
         $resident = Resident::find($residentId);
 
+        if (! $resident) {
+            return;
+        }
+
         $this->members[] = [
             'resident_id' => $resident->id,
             'name' => $resident->name,
@@ -84,7 +114,48 @@ new class extends Component
     }
 
     public function save(){
-        
+        $this->validate([
+            'family_number' => ['required', 'digits:16', 'unique:families,family_number,' . ($this->family?->id ?? 'NULL') . ',id,deleted_at,NULL'],
+            'head_id' => ['required', 'exists:residents,id'],
+            'members' => ['array'],
+            'members.*.resident_id' => ['required', 'exists:residents,id'],
+            'members.*.relation' => ['required', 'string'],
+        ], [
+            'family_number.required' => 'Nomor KK wajib diisi.',
+            'family_number.digits' => 'Nomor KK harus 16 digit.',
+            'family_number.unique' => 'Nomor KK ini sudah terdaftar.',
+            'head_id.required' => 'Kepala keluarga harus dipilih.',
+            'head_id.exists' => 'Kepala keluarga tidak valid.',
+        ]);
+
+        $family = $this->family ?? new Family();
+        $family->family_number = $this->family_number;
+        $family->save();
+
+        FamilyRelationship::where('family_id', $family->id)->delete();
+
+        $relationships = [[
+            'family_id' => $family->id,
+            'resident_id' => $this->head_id,
+            'family_relationship' => 'kepala keluarga',
+        ]];
+
+        foreach ($this->members as $member) {
+            if (empty($member['resident_id'])) {
+                continue;
+            }
+
+            $relationships[] = [
+                'family_id' => $family->id,
+                'resident_id' => $member['resident_id'],
+                'family_relationship' => $member['relation'] ?? 'anak',
+            ];
+        }
+
+        FamilyRelationship::insert($relationships);
+
+        return redirect()->route('dashboard.show-family', $family->family_number)
+            ->with('success', 'Data keluarga berhasil disimpan.');
     }
 };
 ?>
@@ -94,10 +165,12 @@ new class extends Component
         <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
                 <p class="text-sm font-semibold uppercase tracking-wider text-purple-600">Data keluarga baru</p>
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Tambah Keluarga</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">
+                    {{ $family ? 'Edit Keluarga' : 'Tambah Keluarga' }}
+                </h2>
                 <p class="text-sm text-gray-500 mt-2">Lengkapi informasi KK dan susun anggota keluarga.</p>
             </div>
-            <div class="text-sm text-gray-500">Data keluarga baru</div>
+            <div class="text-sm text-gray-500">{{ $family ? 'Perbarui data keluarga' : 'Data keluarga baru' }}</div>
         </div>
 
         {{-- No Kartu Keluarga --}}
@@ -112,7 +185,7 @@ new class extends Component
             <label for="family_number" class="block text-sm font-semibold text-gray-700 mb-2">Nomor KK <span class="text-red-600">*</span></label>
             <div class="relative max-w-xl">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">#</span>
-                <input type="text" id="family_number" value="7201010101010001" maxlength="16" inputmode="numeric" pattern="[0-9]{16}" placeholder="Masukkan 16 digit nomor KK" class="input w-full pl-10 pr-4 py-3 text-lg tracking-widest font-mono" wire:model="family_number">
+                <input type="text" id="family_number" maxlength="16" inputmode="numeric" pattern="[0-9]{16}" placeholder="Masukkan 16 digit nomor KK" class="input w-full pl-10 pr-4 py-3 text-lg tracking-widest font-mono" wire:model="family_number">
             </div>
         </section>
         
@@ -201,8 +274,13 @@ new class extends Component
                                 <option value="suami">Suami</option>
                                 <option value="istri">Istri</option>
                                 <option value="anak">Anak</option>
-                                <option value="orang_tua">Orang Tua</option>
+                                <option value="orang tua">Orang Tua</option>
+                                <option value="keponakan">Keponakan</option>
                                 <option value="saudara">Saudara</option>
+                                <option value="sepupu">Sepupu</option>
+                                <option value="mertua">Mertua</option>
+                                <option value="menantu">Menantu</option>
+                                <option value="cucu">Cucu</option>
                                 <option value="lainnya">Lainnya</option>
                             </select>
                         </div>
@@ -218,7 +296,9 @@ new class extends Component
         {{-- Anggota Keluarga --}}
         <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
             <a href="{{ route('dashboard.list-family') }}" class="text-center bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors">Batal</a>
-            <button type="submit" class="bg-purple-700 text-white px-6 py-3 rounded-xl hover:bg-purple-800 transition-colors shadow-md">💾 Simpan Keluarga</button>
+            <button type="submit" class="bg-purple-700 text-white px-6 py-3 rounded-xl hover:bg-purple-800 transition-colors shadow-md">
+                {{ $family ? '💾 Simpan Perubahan' : '💾 Simpan Keluarga' }}
+            </button>
         </div>
     </form>
 </div>

@@ -29,6 +29,7 @@ class Resident extends Model
         'religion',
         'marital_status',
         'education',
+        'is_currently_studying',
         'gender',
     ];
 
@@ -36,6 +37,7 @@ class Resident extends Model
     protected $casts = [
         'date_of_birth' => 'date',
         'date_of_death' => 'date',
+        'is_currently_studying' => 'boolean',
     ];
 
     protected function age(): Attribute

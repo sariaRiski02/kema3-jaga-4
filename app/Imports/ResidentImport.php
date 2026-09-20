@@ -5,21 +5,28 @@ namespace App\Imports;
 use App\Models\Family;
 use App\Models\FamilyRelationship;
 use App\Models\Resident;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Validators\Failure;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
-class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, ShouldQueue, WithChunkReading, SkipsOnFailure
+class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure
 {
     use SkipsFailures;
+
+    private int $importedRows = 0;
+
+    public function importedRows(): int
+    {
+        return $this->importedRows;
+    }
 
     private const RELATIONSHIPS = [
         'kepala keluarga',
@@ -53,6 +60,22 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
         'cerai mati',
     ];
 
+    private const EDUCATION_LEVELS = [
+        'tidak sekolah',
+        'belum sekolah',
+        'sd/sederajat',
+        'smp/sederajat',
+        'sma/sederajat',
+        'sd',
+        'smp',
+        'sma',
+        'diploma',
+        'sarjana',
+        'magister',
+        'doktor',
+        'lainnya',
+    ];
+
     /**
     * @param array $row
     *
@@ -76,10 +99,25 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
 
     private function normalizeFromList(?string $value, array $validOptions): ?string {
         if(empty($value)) return $value;
-        $lower = strtolower(trim($value));
+        $lower = strtolower(trim(preg_replace('/\s+/', ' ', $value)));
+
+        $canonical = static function (string $text): string {
+            return str_replace([' ', '/', '-', '_'], '', strtolower(trim($text)));
+        };
+
+        $aliases = [
+            'budha' => 'buddha',
+            'smasmk' => 'sma/sederajat',
+            'smk' => 'sma/sederajat',
+        ];
+
+        $canonicalValue = $canonical($lower);
+        if (isset($aliases[$canonicalValue])) {
+            return $aliases[$canonicalValue];
+        }
 
         foreach($validOptions as $option){
-            if($lower === $option){
+            if($canonicalValue === $canonical($option)){
                 return $option;
             }
         }
@@ -87,16 +125,60 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
         return $lower;
     }
 
+    private function normalizeDate($value): ?string
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        if ($value instanceof \DateTimeInterface) {
+            return Carbon::instance($value)->format('Y-m-d');
+        }
+
+        if (is_numeric($value) && (float) $value > 0) {
+            try {
+                return Carbon::instance(ExcelDate::excelToDateTimeObject($value))->format('Y-m-d');
+            } catch (\Throwable) {
+                return (string) $value;
+            }
+        }
+
+        $value = trim((string) $value);
+
+        foreach (['d-m-Y', 'd/m/Y', 'd.m.Y', 'Y-m-d'] as $format) {
+            try {
+                return Carbon::createFromFormat($format, $value)->format('Y-m-d');
+            } catch (\Throwable) {
+                continue;
+            }
+        }
+
+        return $value;
+    }
+
     public function prepareForValidation($row, $index = null)
     {
-        $row = array_map(fn($v) => is_string($v) ? trim($v) : $v, $row);
+        $normalizedRow = [];
 
-        $row['jenis_kelamin']     = $this->normalizeGender($row['jenis_kelamin'] ?? null);
-        $row['agama']             = $this->normalizeFromList($row['agama'] ?? null, self::RELIGIONS);
-        $row['status_perkawinan'] = $this->normalizeFromList($row['status_perkawinan'] ?? null, self::MARITAL_STATUSES);
-        $row['status_dikeluarga'] = $this->normalizeFromList($row['status_dikeluarga'] ?? null, self::RELATIONSHIPS);
+        foreach ($row as $key => $value) {
+            $normalizedRow[strtolower(trim((string) $key))] = is_string($value) ? trim($value) : $value;
+        }
 
-        return $row;
+        $normalizedRow['jenis_kelamin']     = $this->normalizeGender($normalizedRow['jenis_kelamin'] ?? null);
+        $normalizedRow['tanggal_lahir']     = $this->normalizeDate($normalizedRow['tanggal_lahir'] ?? null);
+        $normalizedRow['tanggal_kematian']  = $this->normalizeDate($normalizedRow['tanggal_kematian'] ?? null);
+        $normalizedRow['agama']             = $this->normalizeFromList($normalizedRow['agama'] ?? null, self::RELIGIONS);
+        $normalizedRow['status_perkawinan'] = $this->normalizeFromList($normalizedRow['status_perkawinan'] ?? null, self::MARITAL_STATUSES);
+        $normalizedRow['status_dikeluarga'] = $this->normalizeFromList($normalizedRow['status_dikeluarga'] ?? null, self::RELATIONSHIPS);
+        $normalizedRow['pendidikan']        = $this->normalizeFromList($normalizedRow['pendidikan'] ?? null, self::EDUCATION_LEVELS);
+        $normalizedRow['sedang_bersekolah'] = $this->normalizeBoolean($normalizedRow['sedang_bersekolah'] ?? false);
+
+        return $normalizedRow;
+    }
+
+    private function normalizeBoolean($value): bool
+    {
+        return in_array(strtolower(trim((string) $value)), ['1', 'ya', 'yes', 'true', 'iya'], true);
     }
 
 
@@ -116,7 +198,8 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
             'pekerjaan'          => ['nullable', 'string', 'max:255'],
             'agama'              => ['nullable', Rule::in(self::RELIGIONS)],
             'status_perkawinan'  => ['nullable', Rule::in(self::MARITAL_STATUSES)],
-            'pendidikan'         => ['nullable', 'string', 'max:255'],
+            'pendidikan'         => ['nullable', Rule::in(self::EDUCATION_LEVELS)],
+            'sedang_bersekolah'  => ['nullable', 'boolean'],
             'no_kk'              => ['nullable', 'digits:16'],
         ];
     }
@@ -172,8 +255,8 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
             'status_perkawinan.in' => 'Status perkawinan harus salah satu dari: Belum Kawin, Kawin, Cerai Hidup, atau Cerai Mati.',
 
             // Pendidikan
-            'pendidikan.string' => 'Pendidikan harus berupa teks.',
-            'pendidikan.max'    => 'Pendidikan maksimal 255 karakter.',
+            'pendidikan.in' => 'Pendidikan harus salah satu dari: '
+                . implode(', ', array_map('ucwords', self::EDUCATION_LEVELS)) . '.',
 
             // No. KK
             'no_kk.digits' => 'No. KK harus terdiri dari 16 digit angka.',
@@ -183,45 +266,53 @@ class ResidentImport implements OnEachRow, WithHeadingRow, WithValidation, Shoul
 
     public function onRow(Row $row)
     {
-        $row = $row->toArray();
-        $data = $this->prepareForValidation($row);
+        $data = $this->prepareForValidation($row->toArray());
 
-        $resident = Resident::where('nik', $data['nik'])->first();
+        $nik = $data['nik'] ?? null;
+        if (empty($nik)) {
+            return null;
+        }
 
-        if(!$resident){
-            $resident  = Resident::create([
-                'name' => $data['nama'],
-                'nik' => $data['nik'],
-                'gender' => $data['jenis_kelamin'],
-                'date_of_birth' => $data['tanggal_lahir'],
+        $resident = Resident::where('nik', $nik)->first();
+
+        if (!$resident) {
+            $education = $data['pendidikan'] ?? null;
+
+            $resident = Resident::create([
+                'name' => $data['nama'] ?? null,
+                'nik' => $nik,
+                'gender' => $data['jenis_kelamin'] ?? null,
+                'place_of_birth' => $data['tempat_lahir'] ?? null,
+                'date_of_birth' => $data['tanggal_lahir'] ?? null,
                 'date_of_death' => $data['tanggal_kematian'] ?? null,
                 'address' => $data['alamat'] ?? null,
                 'occupation' => $data['pekerjaan'] ?? null,
                 'religion' => $data['agama'] ?? null,
                 'marital_status' => $data['status_perkawinan'] ?? null,
-                'education' => $data['pendidikan'] ?? null,
+                'education' => $education,
+                'is_currently_studying' => $data['sedang_bersekolah'] ?? false,
             ]);
         }
 
         $family = null;
-        if (!empty($data['no_kk'])) {
-            $family = Family::firstOrCreate(['family_number' => $data['no_kk']]);
+        $noKk = $data['no_kk'] ?? null;
+        if (!empty($noKk)) {
+            $family = Family::firstOrCreate(['family_number' => $noKk]);
         }
 
         $familyRelationship = null;
-        if ($family) {
+        if ($family && !empty($data['status_dikeluarga'])) {
             $familyRelationship = FamilyRelationship::firstOrCreate([
-                'family_id'   => $family->id,
+                'family_id' => $family->id,
                 'resident_id' => $resident->id,
             ], [
-                'family_relationship' => $data['status_dikeluarga'] ?? null,
+                'family_relationship' => $data['status_dikeluarga'],
             ]);
         }
-        return (object) [$resident, $family, $familyRelationship];
-    }
 
-    public function chunkSize(): int{
-        return 200;
+        $this->importedRows++;
+
+        return (object) [$resident, $family, $familyRelationship];
     }
 
 }
