@@ -45,8 +45,8 @@
             @error('place_of_birth') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
-            <label for="jenis_kelamin" class="block text-sm font-medium text-purple-700 mb-1">Tanggal Lahir<span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
-            <input type="text" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="dd-mm-yyyy" class="input px-4 py-3 w-full" required inputmode="numeric" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
+            <label for="tanggal_lahir" class="block text-sm font-medium text-purple-700 mb-1">Tanggal Lahir<span class="text-red-600">*</span> <span class="text-xs text-red-500">(Wajib)</span></label>
+            <input type="date" id="tanggal_lahir" name="date_of_birth" value="{{ old('date_of_birth') }}" class="input px-4 py-3 w-full" required>
             @error('date_of_birth') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
           <div>
@@ -85,7 +85,7 @@
               <span>Tanggal Kematian</span>
               <span class="text-xs text-gray-400 font-normal">(opsional)</span>
             </label>
-            <input type="text" id="tanggal_kematian" name="date_of_death" value="{{ old('date_of_death') }}" class="input px-4 py-3 w-full" placeholder="dd-mm-yyyy" inputmode="numeric" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}">
+            <input type="date" id="tanggal_kematian" name="date_of_death" value="{{ old('date_of_death') }}" class="input px-4 py-3 w-full">
             <span class="text-xs text-gray-500 mt-1 block">Isi jika orang yang bersangkutan telah meninggal dunia.</span>
             @error('date_of_death') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
           </div>
