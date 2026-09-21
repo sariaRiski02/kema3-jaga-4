@@ -2,9 +2,11 @@ services:
   app:
     build:
       context: .
+      dockerfile: docker/php/Dockerfile
       target: app
     volumes:
       - .:/var/www/html
+      - vendor_data:/var/www/html/vendor
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - laravel
@@ -21,11 +23,9 @@ services:
     networks:
       - laravel
 
-  redis:
-    image: redis:7-alpine
-    networks:
-      - laravel
-
 networks:
   laravel:
     driver: bridge
+
+volumes:
+  vendor_data:
