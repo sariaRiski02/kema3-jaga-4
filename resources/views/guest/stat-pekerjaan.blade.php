@@ -1,15 +1,20 @@
+@php
+    $occupationGroup = $resident->occupation_group();
+@endphp
+
 <div class="bg-purple-100 rounded-xl p-6 mb-10">
     <h2 class="text-2xl font-semibold text-purple-900 mb-4 text-center">🛠️ Statistik Pekerjaan</h2>
-    <canvas id="pekerjaanChart" class="w-full max-h-[320px]"></canvas>
+    @if ($occupationGroup->isEmpty())
+        <p class="text-center text-gray-500 py-8">Data pekerjaan belum tersedia</p>
+    @else
+        <canvas id="pekerjaanChart" class="w-full max-h-[320px]"></canvas>
+    @endif
 </div>
 
-
-
+@if (!empty($occupationGroup))
 <script>
-    var occupation_group = @json($resident->occupation_group());
+    var occupation_group = @json($occupationGroup);
     document.addEventListener('DOMContentLoaded', function () {
-
-        
         const lebel_pendidikan = Object.keys(occupation_group);
         const value_pendidikan = Object.values(occupation_group);
 
@@ -33,3 +38,4 @@
         }
     });
 </script>
+@endif

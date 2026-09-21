@@ -1,16 +1,23 @@
+@php
+    $educationGroup = $resident->education_group();
+@endphp
+
+
 <!-- Statistik Pendidikan -->
 <div class="bg-purple-100 rounded-xl p-6 mb-10">
     <h2 class="text-2xl font-semibold text-purple-900 mb-4 text-center">📘 Statistik Pendidikan</h2>
-    <canvas id="pendidikanChart" class="w-full max-h-[320px]"></canvas>
+    @if ($educationGroup->isEmpty())
+        <p class="text-center text-gray-500 py-8">Data pendidikan belum tersedia</p>
+    @else
+        <canvas id="pendidikanChart" class="w-full max-h-[320px]"></canvas>
+    @endif
 </div>
 
-
-
+@if (!empty($educationGroup))
 <script>
     // Pendidikan
-    var residentData = @json($resident->education_group());
+    var residentData = @json($educationGroup);
     document.addEventListener('DOMContentLoaded', function () {
-        
         const lebel_pendidikan = Object.keys(residentData);
         const value_pendidikan = Object.values(residentData);
 
@@ -34,3 +41,4 @@
         }
     });
 </script>
+@endif

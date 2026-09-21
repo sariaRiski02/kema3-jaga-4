@@ -1,20 +1,27 @@
+@php
+    $ageClasification = $resident->age_clasification();
+@endphp
+
 <div class="bg-purple-100 rounded-xl p-6 mb-10">
     <h2 class="text-2xl font-semibold text-purple-900 mb-4 text-center">📊 Statistik Usia</h2>
-    <canvas id="usiaChart" class="w-full max-h-[320px]"></canvas>
-
+    @if ($ageClasification)
+        <p class="text-center text-gray-500 py-8">Data usia belum tersedia</p>
+    @else
+        <canvas id="usiaChart" class="w-full max-h-[320px]"></canvas>
+    @endif
 </div>
-<script>
 
-    
-    var age_clasification = @json($resident->age_clasification());   
+@if (!empty($ageClasification))
+<script>
+    var age_clasification = @json($ageClasification);
     // Usia
     document.addEventListener('DOMContentLoaded', function () {
-        var ages  = age_clasification ? [
+        var ages = [
             age_clasification['0-12'] ?? 0,
             age_clasification['13-17'] ?? 0,
             age_clasification['18-59'] ?? 0,
             age_clasification['60+'] ?? 0
-        ] : [0, 0, 0, 0];
+        ];
         const ctx = document.getElementById('usiaChart');
         if (ctx && window.Chart) {
             new Chart(ctx, {
@@ -35,3 +42,4 @@
         }
     });
 </script>
+@endif
