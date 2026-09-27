@@ -2,30 +2,21 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
-      target: app
+      dockerfile: Dockerfile
+      target: app-dev
     volumes:
       - .:/var/www/html
       - vendor_data:/var/www/html/vendor
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - laravel
+      
 
   nginx:
     image: nginx:alpine
     ports:
-      - "8000:80"
+      - "8080:80"
     volumes:
       - .:/var/www/html
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - app
-    networks:
-      - laravel
-
-networks:
-  laravel:
-    driver: bridge
 
 volumes:
   vendor_data:
