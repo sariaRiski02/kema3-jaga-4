@@ -24,7 +24,6 @@
     <!-- Jumlah penduduk & Jumlah Keluarga -->
     @include('guest.stat-penduduk')
     
-
     <!-- Map -->
     @include('guest.map')
 

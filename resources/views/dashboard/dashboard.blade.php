@@ -51,56 +51,154 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    @foreach ([
-      ['title' => 'Kelompok Umur', 'items' => $stats['age_groups']],
-      ['title' => 'Agama', 'items' => $stats['religions']],
-      ['title' => 'Status Perkawinan', 'items' => $stats['marital_status']],
-      ['title' => 'Pekerjaan', 'items' => $stats['occupations']],
-    ] as $section)
-      <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6">
-        <div class="flex items-center justify-between gap-3 mb-5">
-          <h3 class="text-lg font-bold text-gray-900">{{ $section['title'] }}</h3>
-          <span class="h-2 w-2 rounded-full bg-purple-500"></span>
+    <!-- Kelompok Umur -->
+    <section class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200 shadow-md p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-blue-900">👶 Kelompok Umur</h3>
+          <p class="text-xs text-blue-700 mt-1">Distribusi populasi berdasarkan usia</p>
         </div>
-        <div class="space-y-3">
-          @forelse ($section['items'] as $label => $count)
-            <div class="flex items-center justify-between gap-4 text-sm border-b border-gray-100 last:border-0 pb-3 last:pb-0">
-              <span class="text-gray-600 truncate">{{ $label }}</span>
-              <span class="min-w-8 rounded-lg bg-purple-50 px-2 py-1 text-center font-bold text-purple-700">{{ $count }}</span>
+        <span class="text-2xl">📊</span>
+      </div>
+      <div class="space-y-4">
+        @forelse ($stats['age_groups'] as $label => $count)
+          @php
+            $totalCount = $stats['age_groups']->sum();
+            $percentage = $totalCount > 0 ? ($count / $totalCount) * 100 : 0;
+            $colorBg = match($label) {
+              'Anak-anak (0-12 tahun)' => '#3b82f6',
+              'Remaja (13-17 tahun)' => '#22c55e',
+              'Dewasa (18-59 tahun)' => '#a855f7',
+              'Lansia (60+ tahun)' => '#f97316',
+              default => '#9ca3af'
+            };
+          @endphp
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-sm font-semibold text-blue-900">{{ $label }}</span>
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-white text-sm font-bold text-blue-700">
+                {{ $count }} <span class="text-xs text-gray-500">{{ number_format($percentage, 1) }}%</span>
+              </span>
             </div>
-          @empty
-            <p class="text-sm text-gray-400">Belum ada data.</p>
-          @endforelse
-        </div>
-      </section>
-    @endforeach
-
-    <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6">
-      <div class="flex items-center justify-between gap-3 mb-5">
-        <h3 class="text-lg font-bold text-gray-900">Pendidikan</h3>
-        <span class="h-2 w-2 rounded-full bg-green-500"></span>
-      </div>
-
-      <h4 class="text-xs font-bold uppercase tracking-wide text-blue-700 mb-3">Sedang bersekolah</h4>
-      <div class="space-y-3 mb-6">
-        @foreach ($stats['education']['sedang_sekolah'] as $label => $count)
-          <div class="flex items-center justify-between gap-4 text-sm border-b border-gray-100 last:border-0 pb-3 last:pb-0">
-            <span class="text-gray-600">{{ $label }}</span>
-            <span class="min-w-8 rounded-lg bg-blue-50 px-2 py-1 text-center font-bold text-blue-700">{{ $count }}</span>
-          </div>
-        @endforeach
-      </div>
-
-      <h4 class="text-xs font-bold uppercase tracking-wide text-green-700 mb-3">Sudah lulus</h4>
-      <div class="space-y-3">
-        @forelse ($stats['education']['sudah_lulus'] as $label => $count)
-          <div class="flex items-center justify-between gap-4 text-sm border-b border-gray-100 last:border-0 pb-3 last:pb-0">
-            <span class="text-gray-600 truncate">{{ $label }}</span>
-            <span class="min-w-8 rounded-lg bg-green-50 px-2 py-1 text-center font-bold text-green-700">{{ $count }}</span>
+            <div class="h-3 bg-white rounded-full overflow-hidden shadow-sm">
+              <div class="h-full rounded-full transition-all duration-500" style="width: {{ $percentage }}%; background-color: {{ $colorBg }};"></div>
+            </div>
           </div>
         @empty
-          <p class="text-sm text-gray-400">Belum ada data pendidikan yang sudah lulus.</p>
+          <p class="text-sm text-blue-600">Belum ada data kelompok umur.</p>
         @endforelse
+      </div>
+    </section>
+
+    <!-- Agama -->
+    <section class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl border border-amber-200 shadow-md p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-amber-900">🙏 Agama</h3>
+          <p class="text-xs text-amber-700 mt-1">Keragaman agama di wilayah</p>
+        </div>
+        <span class="text-2xl">⛪</span>
+      </div>
+      <div class="space-y-3">
+        @forelse ($stats['religions'] as $label => $count)
+          <div class="flex items-center justify-between gap-4 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+            <span class="inline-flex items-center justify-center min-w-10 h-10 rounded-lg bg-amber-100 font-bold text-amber-700">{{ $count }}</span>
+          </div>
+        @empty
+          <p class="text-sm text-amber-600">Belum ada data agama.</p>
+        @endforelse
+      </div>
+    </section>
+
+    <!-- Status Perkawinan -->
+    <section class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-2xl border border-pink-200 shadow-md p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-pink-900">💍 Status Perkawinan</h3>
+          <p class="text-xs text-pink-700 mt-1">Komposisi status perkawinan</p>
+        </div>
+        <span class="text-2xl">👰</span>
+      </div>
+      <div class="space-y-3">
+        @forelse ($stats['marital_status'] as $label => $count)
+          <div class="flex items-center justify-between gap-4 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+            <span class="inline-flex items-center justify-center min-w-10 h-10 rounded-lg bg-pink-100 font-bold text-pink-700">{{ $count }}</span>
+          </div>
+        @empty
+          <p class="text-sm text-pink-600">Belum ada data status perkawinan.</p>
+        @endforelse
+      </div>
+    </section>
+
+    <!-- Pekerjaan -->
+    <section class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl border border-green-200 shadow-md p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-green-900">🛠️ Pekerjaan</h3>
+          <p class="text-xs text-green-700 mt-1">Jenis pekerjaan penduduk</p>
+        </div>
+        <span class="text-2xl">💼</span>
+      </div>
+      <div class="space-y-3">
+        @forelse ($stats['occupations'] as $label => $count)
+          <div class="flex items-center justify-between gap-4 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition">
+            <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+            <span class="inline-flex items-center justify-center min-w-10 h-10 rounded-lg bg-green-100 font-bold text-green-700">{{ $count }}</span>
+          </div>
+        @empty
+          <p class="text-sm text-green-600">Belum ada data pekerjaan.</p>
+        @endforelse
+      </div>
+    </section>
+
+    <!-- Pendidikan -->
+    <section class="lg:col-span-2 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl border border-indigo-200 shadow-md p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-indigo-900">📚 Pendidikan</h3>
+          <p class="text-xs text-indigo-700 mt-1">Tingkat pendidikan penduduk</p>
+        </div>
+        <span class="text-2xl">🎓</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Sedang Bersekolah -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wide text-blue-700 mb-4 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+            Sedang bersekolah
+          </h4>
+          <div class="space-y-3">
+            @forelse ($stats['education']['sedang_sekolah'] as $label => $count)
+              <div class="flex items-center justify-between gap-3 p-2 bg-white rounded-lg hover:shadow-sm transition">
+                <span class="text-sm text-gray-700">{{ $label }}</span>
+                <span class="inline-flex items-center justify-center min-w-8 h-8 rounded-lg bg-blue-100 text-xs font-bold text-blue-700">{{ $count }}</span>
+              </div>
+            @empty
+              <p class="text-sm text-blue-600">Belum ada data.</p>
+            @endforelse
+          </div>
+        </div>
+
+        <!-- Sudah Lulus -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wide text-green-700 mb-4 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+            Sudah lulus
+          </h4>
+          <div class="space-y-3">
+            @forelse ($stats['education']['sudah_lulus'] as $label => $count)
+              <div class="flex items-center justify-between gap-3 p-2 bg-white rounded-lg hover:shadow-sm transition">
+                <span class="text-sm text-gray-700">{{ $label }}</span>
+                <span class="inline-flex items-center justify-center min-w-8 h-8 rounded-lg bg-green-100 text-xs font-bold text-green-700">{{ $count }}</span>
+              </div>
+            @empty
+              <p class="text-sm text-green-600">Belum ada data.</p>
+            @endforelse
+          </div>
+        </div>
       </div>
     </section>
   </div>

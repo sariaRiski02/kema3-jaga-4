@@ -53,32 +53,8 @@ class DashboardController extends Controller
 
     // List Resident
     public function listResident(Request $request){
-        $search = trim((string) $request->input('search', ''));
-        $query = $this->residentStat->Objresident->newQuery();
-
-        if ($search !== '') {
-            $query->where(function ($residentQuery) use ($search) {
-                $residentQuery
-                    ->where('nik', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('gender', 'like', "%{$search}%");
-
-                if (ctype_digit($search)) {
-                    $age = (int) $search;
-                    $today = Carbon::today();
-
-                    $residentQuery->orWhere(function ($ageQuery) use ($age, $today) {
-                        $ageQuery
-                            ->whereDate('date_of_birth', '<=', $today->copy()->subYears($age))
-                            ->whereDate('date_of_birth', '>', $today->copy()->subYears($age + 1));
-                    });
-                }
-            });
-        }
-
-        $residents = $query->latest()->paginate(15)->withQueryString();
-
-        return view('dashboard.list-resident', compact('residents'));
+        // Livewire component akan handle search dan pagination
+        return view('dashboard.list-resident');
     }
     
     public function showResident(Resident $resident){

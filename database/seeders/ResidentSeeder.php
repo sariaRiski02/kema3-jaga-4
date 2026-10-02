@@ -26,8 +26,7 @@ class ResidentSeeder extends Seeder
                     'mertua',
                     'menantu',
                     'cucu',
-                    'saudara',
-                    'lainnya lain',
+                    'lainnya',
             ];
         foreach(Family::all() as $family){
 

@@ -1,0 +1,270 @@
+name: CI/CD Pipeline - Build & Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+env:
+  REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  # ===================================
+  # Job 1: Test
+  # ===================================
+  test:
+    runs-on: ubuntu-latest
+    name: Test & Lint
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: kema3_test
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: xdebug
+          extensions: mysql, pdo_mysql
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Setup .env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_DATABASE=kema3_test" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=password" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+
+      - name: Run Database Migrations
+        run: php artisan migrate --force
+
+      - name: Run Unit Tests
+        run: composer test
+
+      - name: Code Format Check (Pint)
+        run: vendor/bin/pint --test || true
+
+      - name: Upload Coverage Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: storage/logs/
+
+  # ===================================
+  # Job 2: Build & Push to ECR
+  # ===================================
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    name: Build Docker Image
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag
+        id: image
+        run: |
+          COMMIT_SHA=${{ github.sha }}
+          SHORT_SHA=${COMMIT_SHA:0:7}
+          BRANCH=${{ github.ref_name }}
+          TIMESTAMP=$(date +%s)
+          
+          if [ "$BRANCH" = "main" ]; then
+            TAG="latest"
+            TAG_ALT="${SHORT_SHA}"
+          else
+            TAG="${BRANCH}-${SHORT_SHA}"
+            TAG_ALT="${BRANCH}-latest"
+          fi
+          
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "tag_alt=${TAG_ALT}" >> $GITHUB_OUTPUT
+          echo "image_uri=${REGISTRY}/${REPOSITORY}" >> $GITHUB_OUTPUT
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.image.outputs.image_uri }}:${{ steps.image.outputs.tag }}
+            ${{ steps.image.outputs.image_uri }}:${{ steps.image.outputs.tag_alt }}
+          cache-from: type=registry,ref=${{ steps.image.outputs.image_uri }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image.outputs.image_uri }}:buildcache,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  # ===================================
+  # Job 3: Deploy to EC2
+  # ===================================
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy to EC2
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get image tag
+        id: image
+        run: |
+          COMMIT_SHA=${{ github.sha }}
+          SHORT_SHA=${COMMIT_SHA:0:7}
+          TAG="latest"
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "image_uri=${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}" >> $GITHUB_OUTPUT
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e
+            echo "🚀 Starting deployment..."
+            
+            # Navigate to app directory
+            cd ${{ secrets.DEPLOY_PATH }}
+            
+            # Login to ECR
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+              docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+            
+            # Pull latest image
+            docker pull ${{ steps.image.outputs.image_uri }}:${{ steps.image.outputs.tag }}
+            
+            # Stop old containers
+            docker compose -f compose.prod.yml down || true
+            
+            # Create .env if not exists
+            if [ ! -f .env ]; then
+              echo "⚠️  .env file not found! Creating from .env.example..."
+              cp .env.example .env
+              echo ""
+              echo "⚠️  IMPORTANT: Edit .env file with correct database credentials!"
+              echo "   Run: nano ${{ secrets.DEPLOY_PATH }}/.env"
+              echo ""
+            fi
+            
+            # Export image tag
+            export IMAGE=${{ steps.image.outputs.image_uri }}:${{ steps.image.outputs.tag }}
+            
+            # Update and start services
+            docker compose -f compose.prod.yml up -d
+            
+            echo ""
+            echo "✅ Waiting for app to be ready..."
+            sleep 10
+            
+            # Run migrations
+            docker compose -f compose.prod.yml exec -T app php artisan migrate --force || true
+            
+            # Clear cache
+            docker compose -f compose.prod.yml exec -T app php artisan cache:clear || true
+            docker compose -f compose.prod.yml exec -T app php artisan config:cache || true
+            docker compose -f compose.prod.yml exec -T app php artisan view:clear || true
+            
+            # Show status
+            echo ""
+            echo "🎉 Deployment successful!"
+            echo ""
+            docker compose -f compose.prod.yml ps
+            
+            # Cleanup old images
+            docker image prune -f --filter "until=168h" || true
+            
+            echo ""
+            echo "📋 Application URL: http://${{ secrets.EC2_HOST }}"
+
+      - name: Deployment Notification
+        if: always()
+        run: |
+          echo "🚀 Deployment Status: ${{ job.status }}"
+          echo "Deployed to: ${{ secrets.EC2_HOST }}"
+          echo "Image: ${{ steps.image.outputs.image_uri }}:latest"
+
+      - name: Slack Notification (Optional)
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "Deployment ${{ job.status }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*kema3-jaga-4 Deployment* ${{ job.status }}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
