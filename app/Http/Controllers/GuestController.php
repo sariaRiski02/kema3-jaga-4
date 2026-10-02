@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Family;
+use App\Services\ResidentStatService;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
+
+    protected $residentStatService;
+    public function __construct()
+    {
+        $this->residentStatService = new ResidentStatService();
+    }
+
     public function index()
     {
-        return view('guest.main');
+        
+        $resident = $this->residentStatService;
+        
+        $families = Family::all();
+        return view('guest.main', compact('resident', 'families'));
     }
 
     public function loginPage()

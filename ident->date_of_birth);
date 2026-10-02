@@ -1,0 +1,22 @@
+[90m= [39m[34;4mApp\Models\Resident[39;24m {#8186
+    [34mid[39m: [35m1[39m,
+    [34mname[39m: [32m"[39m[32mAntonio Kulas[39m[32m"[39m,
+    [34mnik[39m: [32m"[39m[32m5063498434096021[39m[32m"[39m,
+    [34mplace_of_birth[39m: [32m"[39m[32mNorth Doylestad[39m[32m"[39m,
+    [34mdate_of_birth[39m: [32m"[39m[32m1992-10-22[39m[32m"[39m,
+    [34mdate_of_death[39m: [36mnull[39m,
+    [34maddress[39m: <<<[32mEOS[39m
+      [32m35383 Turner Harbors Suite 113[39m
+      [32mBruenburgh, VA 28959-8393[39m
+      [32mEOS[39m,
+    [34mfamily_relationship[39m: [32m"[39m[32mkepala keluarga[39m[32m"[39m,
+    [34moccupation[39m: [32m"[39m[32mElectrician[39m[32m"[39m,
+    [34mreligion[39m: [32m"[39m[32mIslam[39m[32m"[39m,
+    [34mmarital_status[39m: [32m"[39m[32mCerai Hidup[39m[32m"[39m,
+    [34meducation[39m: [32m"[39m[32mSMP[39m[32m"[39m,
+    [34mfamily_id[39m: [35m1[39m,
+    [34mgender[39m: [32m"[39m[32mperempuan[39m[32m"[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-08-19 04:04:51[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-08-19 04:04:51[39m[32m"[39m,
+    [34mdeleted_at[39m: [36mnull[39m,
+  }
